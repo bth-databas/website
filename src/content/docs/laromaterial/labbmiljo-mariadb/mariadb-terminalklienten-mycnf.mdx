@@ -166,12 +166,12 @@ Du löser det genom att sätta rättigheter till 600 på filen.
 
 Du kan testa och se exakt vilka detaljer från konfigurationsfilen som används.
 
-Det kan till exempel se ut så här med en konfigurationsfil som enbart anger user och password.
+Det kan till exempel se ut så här med vår konfigurationsfil som exempel.
 
 ```bash title="Testa vilka argument som terminalklienten mariadb använder"
 $ mariadb --print-defaults
 mariadb would have been started with the following arguments:
---user=dbadm --password=P@ssw0rd
+--user=dbadm --password=P@ssw0rd --loose-local-infile=1
 ```
 
 Om du inte får fram önskat resultat så provar du att kontrollera att du verkligen lagt din `my.cnf` på en plats som stöds av just din terminalklient.
