@@ -11,7 +11,7 @@ Som ett sista steg i varje kursmoment skall du redovisa. Gör så här.
 
 ## Skriv redovisningstext
 
-Du skriver din redovisningstext i din webbplats för kursen under sidan "Redovisa".
+Du skriver din redovisningstext i filen `README.md` som finns för varje kmom i ditt kursrepo.
 
 I din redovisningstext beskriver du dina reflektioner från kursmomentet, vad som gick bra och om något var mer utmanande. Reflektera över svårigheter, problem, lösningar, erfarenheter, lärdomar, resultatet, etc.
 
@@ -19,7 +19,7 @@ Besvara de specifika frågor som finns för varje uppgift och kursmoment.
 
 Skriv ett stycke om totalt 15-20 meningar för varje kursmoment. Försök väva in frågorna i löpande text.
 
-Kan du koppla och jämföra (reflektera) dina lärdomar från nuvarande kursmoment mot andra kursmoment, kurser eller andra lärdomar du har sedan tidigare? Sånt gillar lärare.
+Kan du koppla och jämföra (reflektera, resonera) dina lärdomar från nuvarande kursmoment mot andra kursmoment, kurser eller andra lärdomar du har sedan tidigare? Sånt gillar lärare.
 
 {/*
 Läs gärna hur du kan skriva [en bra redovisningstext](kurser/faq/att-skriva-en-bra-redovisningstext).
@@ -41,7 +41,9 @@ Du kan använda följande versioner för dina taggar.
 | v4.0.0   | kmom04 |
 | v5.0.0   | kmom05 |
 | v6.0.0   | kmom06 |
-| v7.0.0   | kmom10 |
+| v7.0.0   | kmom07 |
+| v8.0.0   | kmom08 |
+| v10.0.0  | kmom10 |
 
 Tagga ditt repo så här.
 
@@ -60,20 +62,24 @@ git push --tags
 
 I framtiden kommer du (troligen) att använda versionsnummer enligt något som heter "[Semantic versioning](https://semver.org/)", kika gärna på hur det fungerar.
 
-Som ett sista steg i din inlämning så kan du kontrollera att GitHub verkligen innehåller den allra senaste versionen av din kod.
-
 
 
 ## Självtest
 
-Gör ett självtest och dubbelkolla att allt finns publicerat på GitHub Pages. Den vanligaste anledningen till komplettering är att man missat någon liten del som står i kraven för uppgiften. Gör en egen självtest att du uppfyller alla kraven i uppgiften, det kan spara en del tid. Dessutom vill man alltid göra en perfekt inlämning, eller hur?
+Den vanligaste anledningen till komplettering är att man missat någon liten del som står i kraven för uppgiften. Gör en egen självtest att du uppfyller alla kraven i uppgiften, det kan spara en del tid. Dessutom vill man alltid göra en perfekt inlämning, eller hur?
 
+Kontrollera att GitHub verkligen innehåller den allra senaste versionen av din kod. Dubbelkolla på GitHub att senaste versionen/committen av din kod finns där, du kan tex titta i "Latest commit" på GitHub-sidan för ditt repo.
+
+Dubbelkolla även att sista versionen av din redovisningstext finns publicerat på GitHub Pages. 
+
+{/*
 Missa inte att köra lintern.
 
 ```bash title="Kör eslint."
 # Gå till roten av ditt kursrepo
 npx eslint
 ```
+*/}
 
 
 
@@ -87,7 +93,9 @@ Det sker ingen betygsättning, bedömning eller återkoppling när du är klar o
 
 **När du lämnar in kmom06** kontrolleras att du uppfyller kraven i kmom04, kmom05 och kmom06. Du får betyget G när du är godkänd och du får Ux om det är något som saknas eller behöver uppdateras.
 
-**När du lämnar in kmom10** rättas den och samtidigt kontrolleras att du har godkänt på inlämningen för kmom03 och kmom06. Därefter får du ditt godkända betyg A-E eller Fx för komplettering eller F för underkänt. Betyget på kmom10 blir också ditt slutbetyg på kursen.
+Det sker ingen betygsättning, bedömning eller återkoppling när du är klar och lämnar in kmom07 och kmom08. 
+
+**När du lämnar in kmom10** rättas den och samtidigt kontrolleras att du har godkänt på inlämningen för kmom03 och kmom06 samt kmom07. kmom08. Därefter får du ditt godkända betyg A-E eller Fx för komplettering eller F för underkänt. Betyget på kmom10 blir också ditt slutbetyg på kursen.
 
 
 
@@ -95,13 +103,7 @@ Det sker ingen betygsättning, bedömning eller återkoppling när du är klar o
 
 I samband med att du lämnar in kmom03, kmom06 och kmom10 skall du även göra en pull request (PR) på GitHub för att visa att du gör din inlämning.
 
-Gör så här.
-
-:::danger
-Beskriv hur studenten gör en inlämning via en PR.
-:::
-
-Läraren kommer att titta på din inlämning och betygsätta den.
+Läraren kommer då att titta på din inlämning och betygsätta den.
 
 
 
@@ -121,19 +123,6 @@ Den som rättar och kontrollerar din inlämning utgår från ovan kommando.
 
 Du kan själv provköra och se samma resultat som rättaren ser. Det är en mycket god idé att alltid testköra sin inlämning på samma sätt som rättaren gör. Du sparar tid genom att själv upptäcka eventuella slarvfel.
 */}
-
-
-{/*
-Lämna in på Canvas 
----------------------------------------
-
-Lämna in en länk till din rapport-sida på Canvas. Länken innehåller din studentakronym och på det viset hittar rättaren din inlämning.
-
-Det är bra om du också kopierar in din redovisningstext in i Canvas, det kan vara bra att ha som backup om något händer.
-
-Läraren kommer snabbt kolla igenom din redovisningstext och uppgifterna. Betyg är G (godkänd) eller U/komplettera (komplettera → gör om → gör bättre). Bedömningen baseras på din redovisningstext samt att du har fullgjort kursmomentets uppgifter.
-*/}
-
 
 
 {/*

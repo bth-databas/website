@@ -1,5 +1,5 @@
 ---
-title: "⚠️ Kmom01: Databas och SQL" 
+title: "Kmom01: Databas och SQL" 
 description: Använd en befintlig databas och kom igång med grunderna i SQL.
 revision:
   2026-01-01: (A, mos) Första versionen. 
@@ -7,6 +7,12 @@ revision:
 
 import Figure from '@components/CustomFigure.astro';
 import YouTube from '@components/YouTube.astro';
+
+:::danger
+Kursmomentet är ännu ej släppt då det saknas delar av innehållet.
+
+Du kan dock läsa igenom det som finns publicerat och förbereda dig inför kursmomentet.
+:::
 
 Vi börjar med att installera en labbmiljö som består av en databas och ett par databas-klienter. Vi skall jobba med databasen MariaDB som är en relationsdatabas. Som klienter använder vi en terminalbaserad klient och en fönsterbaserad grafisk klient. Klienterna har båda sin plats i vår verktygslåda och de är bra att använda vid olika typer av tillfällen.
 
@@ -26,15 +32,31 @@ PLAN FÖR GENOMGÅNGAR:
 
 # Måndag
 
+Första timmen:
+
+* Berätta om kursens upplägg, examination, inlämningar, betygsättning.
+* Berätta om labbmiljön och vad som skall installeras.
+* Berätta om kmom och vad som skall göras i kmom01.
+* Visa hur ett kursrepo ser ut för en student och hur man jobbar med det.
+
+Andra timmen:
+
+* Jobba igenom övningen med databasen World.
+
 
 
 # Onsdag
+
+* Introduktion till ER-modellering
+* Verktyg för modellering: dbdiagram.io?
+* Modellering av databasen world
+* Datatyper i SQL?
 
 
 
 # Torsdag
 
-
+* ?
 
 */}
 
@@ -89,15 +111,13 @@ Kika igenom följande artiklar.
 
 
 
-{/*
 ### Video 
 
 Kika igenom följande videor för att få grepp om grunderna i Databaser och SQL. Ibland kan man hitta bra resurser på nätet och detta är ett litet försök att visa upp det.
 
-1. För att få en snabb översikt om databaser och SQL så kikar du igenom videon "[What is Database & SQL?](https://www.youtube.com/watch?v=FR4QIeZaPeM)". Videon ger dig en snabb översikt av termer med förklaringar.
+1. För att få en snabb översikt om databaser och SQL så kikar du igenom videon "[What is Database & SQL? (6 min)](https://www.youtube.com/watch?v=FR4QIeZaPeM)". Videon ger dig en snabb översikt av termer med förklaringar.
 
-1. Videon "[Learn Basic SQL in 10 Minutes](https://www.youtube.com/watch?v=bEtnYWuo2Bw)" ger dig en snabb förklaring till grunderna i SQL. Videon hanterar även översikt av mer avancerade begrepp som JOIN, UNION och GROUP. Dessa kommer senare i kursen.
-*/}
+1. Videon "[Learn Basic SQL in 10 Minutes (9 min)](https://www.youtube.com/watch?v=bEtnYWuo2Bw)" ger dig en snabb förklaring till grunderna i SQL. Videon hanterar även översikt av mer avancerade begrepp som JOIN, UNION och GROUP. Dessa kommer senare i kursen.
 
 
 
@@ -108,9 +128,11 @@ Här finns ett antal instuderingsfrågor som hjälper dig att finna information 
 <details>
 <summary>Instuderingsfrågor</summary>
 
-1. 
+1. Jag skall gå en kurs i databasteknik på högskolan, vill du förklara grunden i en relationsdatabas?
+1. Berätta kort om databasen MariaDB och hur den skiljer sig från MySQL.
+1. Förklara kort hur SQL fungerar och vilka de vanligaste kommandona är.
 
-Här är en [summering av hur en sådan dialog kan se ut](https://chatgpt.com/share/689caa6e-00ec-8005-b4b0-3542b28ec65e), sen är det bara att fylla på med egna funderingar.
+Här är en [summering av hur en sådan dialog kan se ut](https://chatgpt.com/share/696133c6-e268-8005-9383-5a185ca1d533), sen är det bara att fylla på med egna funderingar.
 
 </details>
 
@@ -128,17 +150,21 @@ Glöm inte att vara kritisk till informationen du får, precis som man vanligen 
 
 Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
+1. ⚠️ Jobba igenom övningen [Databasen World](/website/laromaterial/ovning/databasen-world/). Övningen går igenom hur du kan använda en befintlig databas (world) och skapa SQL-frågor mot den med både terminalklienten och desktopklienten.
+
 
 
 ### Uppgifter
 
 Dessa uppgifter skall utföras och redovisas.
 
-1. Gör uppgiften "[Skapa en me-sida för redovisning i dbwebb-kurs](uppgift/skapa-en-me-sida-for-redovisning-i-dbwebb-kurs)". Spara resultatet i `me/redovisa`.
+1. ⚠️ Genomför uppgiften "[Databasen World](/website/laromaterial/uppgift/kmom01-databasen-world/)".
 
+{/*
 1. Jobba igenom första delarna av guiden "[Kom igång med SQL i MySQL](guide/kom-igang-med-sql-i-mysql-v2)". I guiden ombeds du göra övningar och spara din SQL-kod i filer. Lägg dem i katalogen `me/skolan` som din redovisning. I nästa kmom fortsätter du med nästa del i guiden.
     * [Delen: Installation](guide/kom-igang-med-sql-i-mysql-v2/installation)
     * [Delen: Bygg en databas](guide/kom-igang-med-sql-i-mysql-v2/bygg-en-databas)
+*/}
 
 
 
@@ -150,7 +176,8 @@ Se till att följande frågor besvaras i din redovisningstext i din rapportsida.
 
 * Hur känns det att komma igång med databaser, klienter och SQL - är det något du ser fram emot eller fasar inför?
 * Har du jobbat med databaser eller liknande tekniker tidigare?
-* Berätta lite om ditt arbetet med SQL i guiden, hur gick det?
+* Hur gick det att komma igång med labbmiljön för MariaDB och klienterna, flöt det på eller strulade någon del?
+* Hur gick det att genomföra övning/uppgift med databasen world?
 * Jämför SQL med andra sätt att programmera, relatera till några av de programmeringsspråk du kan.
 * Vilken är din TIL för detta kmom?
 

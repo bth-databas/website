@@ -7,3 +7,5 @@ sidebar:
 
 Övningar är delar av kursmomenten. De förbereder dig inför de uppgifter du skall göra. Ofta innehåller övningarna delar av lösningen till uppgifterna.
 
+Titta i instruktionen för kmomen för att se vilka övningar som hör till respektive kmom.
+

@@ -81,11 +81,11 @@ export default defineConfig({
 							collapsed: true,
 						},
 						{ 
-							label: '⚠️ Övning',
+							label: 'Övning',
 							autogenerate: { directory: 'laromaterial/ovning' },
 							collapsed: true,
 						},
-						{ 
+						/*{ 
 							label: '⚠️ Lab',
 							collapsed: true,
 							items: [
@@ -96,14 +96,14 @@ export default defineConfig({
 								'laromaterial/lab/lab_04/readme',
 								'laromaterial/lab/readme',
 							],
-						},
+						},*/
 						{ 
-							label: '⚠️ Uppgift',
+							label: 'Uppgift',
 							autogenerate: { directory: 'laromaterial/uppgift' },
 							collapsed: true,
 						},
 						{ 
-							label: '⚠️ Instruktion',
+							label: 'Instruktion',
 							autogenerate: { directory: 'laromaterial/instruktion' },
 							collapsed: true,
 						},
