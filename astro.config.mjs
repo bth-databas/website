@@ -56,8 +56,13 @@ export default defineConfig({
 					items: [
 						'laromaterial',
 						{ 
-							label: 'Labbmiljö',
+							label: 'Labbmiljö (grund)',
 							autogenerate: { directory: 'laromaterial/labbmiljo' },
+							collapsed: true,
+						},
+						{ 
+							label: 'Labbmiljö (MariaDB)',
+							autogenerate: { directory: 'laromaterial/labbmiljo-mariadb' },
 							collapsed: true,
 						},
 						{ 
