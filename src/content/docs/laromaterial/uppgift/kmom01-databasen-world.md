@@ -23,23 +23,42 @@ Du behöver ha jobbat igenom "Övning med databasen World och SELECT".
 
 
 
-## Allmänt
-
-Om du har utfört övningen så har du gjort en storl del av uppgiften.
-
-
-
-## Krav
+## Krav - Allmänt
 
 Utför följande krav.
 
+1. Spara all din kod i filen `kmom/01/world1/task.sql`, tillsammans med kommentarer ovanför varje uppgift så att det blir enkelt att se vilken uppgift som är löst. 
+
+
+
+## Krav - Skapa rapporter
+
+Skapa SQL-kod för att generera följande rapporter. Din SQL-kod skall generera exakt samma rapport som finns i utskrifterna nedan.
+
+1.
+
+
+
+## Krav - Besvara frågor
+
+Skapa SQL-kod för att besvara följande frågor. När man kör din SQL-kod skall man se svaret på respektive fråga, likt exempel nedan.
+
 1. 
+
+
 
 <!--
 Visa rapport i terminalklienten.
 
 Visa rapport i workbench (eller motsvarande)
 
+Joina två tabeller
+Språk
+Länder med högst lägst population, area
+Länder i Europa, Norden, Continent, Region
+LifeExpectancy
+Vilka länder har kungadömen?
+Vilka länder har inget independentyYear?
 
 -->
 
