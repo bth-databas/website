@@ -24,14 +24,14 @@ Du kan hantera terminalen och navigera i din hemmakatalog.
 
 
 
-## Läs på om .my.cnf 
+## Läs på om konfigurationsfilen 
 
 
 Du kan läsa om hur det fungerar i artikeln "[Configuring MariaDB with Option Files](https://mariadb.com/kb/en/configuring-mariadb-with-option-files/)".
 
 
 
-## Ett exempel på filen my.cnf 
+## Ett exempel på filen konfigurationsfilen
 
 
 Med tanke på hur vi installerar databasen MariaDB så kan följande exempel fungera som en mall för filen `my.cnf`.
@@ -60,11 +60,11 @@ Du behöver eventuellt anpassa filen till ditt system med till exempel inställn
 
 
 
-## Spara filen my.cnf 
+## Spara konfigurationsfilen 
 
-Filen heter `my.cnf` och behöver sparas på en plats där din terminalklient kan läsa den.
+Filen heter `my.cnf`, eller `.my.cnf`, beroende av var du sparar den. Konfigurationsfilen behöver sparas på en plats där din terminalklient kan läsa den.
 
-Normalt sett kan du placera filen `.my.cnf` i din hemmakatalog i den terminal du använder. En punkt framför filnamnet gör filen till en "dold fil". Dolda filer visas inte när man gör `ls`, man behöver göra `ls -a` för att visa dem.
+Vi skall spara filen `.my.cnf` i din hemmakatalog i den terminal du använder. En punkt framför filnamnet gör filen till en "dold fil". Dolda filer visas inte när man gör `ls`, man behöver göra `ls -a` för att visa dem.
 
 I alla bash-terminal (Linux, macOS, WSL2 bash) innebär det att du enklast placerar filen i `$HOME/.my.cnf` vilket är samma sak som `~/.my.cnf`.
 
