@@ -42,6 +42,35 @@ import wb1 from '@assets/databas/installera-wb/wb1.png';
 
 
 
+## Problem att installera WorkBench?
+
+Här är vanliga fel som kan inträffa när du försöker installera WorkBench. Om du inte fick problem så hoppar du över dessa kapitel och fortsätter direkt på att "Skapa koppling till databasservern".
+
+
+
+### Alternativ till WorkBench - DBeaver
+
+Om du sitter på Mac eller Linux så kan det "ibland" strula med WorkBench och då kan du eventuellt välja att använda ett alternativ som heter DBeaver Community.
+
+Läs mer på "[Installera DBeaver](https://dbeaver.io/download/)".
+
+Det finns även viss information om DBeaver på en [issue i en äldre version av databas-kursen](https://github.com/dbwebb-se/databas/issues/56).
+
+
+
+### Windows: Saknar Visual C++ 2019 Redist
+
+Om Workbench ger en felruta om att den saknar Visual C++ 2019 Redist (se bild) så kan [rätt redist installeras härifrån](https://aka.ms/vc14/vc_redist.x64.exe) (aka.ms ägs av Microsoft).
+
+import wb6 from '@assets/databas/installera-wb/wb6.png';
+
+<Figure 
+    src={wb6}
+    caption="Visual C++ 2019 Redist saknas."
+/>
+
+
+
 ## Skapa koppling till databasservern
 
 Skapa en ny "MySQL Connection" och använd din användare "dbadm" (som du skapade tidigare) för att logga in till databasservern.
