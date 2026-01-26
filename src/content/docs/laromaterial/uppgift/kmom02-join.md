@@ -82,7 +82,7 @@ Vilka länder har inget independentyYear?
 
     </details>
 
-1. Visa landets namn och hur många språk som talas i landet. Sortera tabellen och visa först de 5 länder där flest språk talas och därefter de 5 länder där minst språk talas.
+1. Visa landets namn och hur många språk som talas i landet. Sortera tabellen och visa först de 5 länder där flest språk talas (en rapport) och därefter de 5 länder där minst språk talas (ytterligare en rapport).
 
     <details><summary>Resultat</summary>
 
@@ -90,11 +90,11 @@ Vilka länder har inget independentyYear?
     +--------------------+---------------------+
     | country_name       | number_of_languages |
     +--------------------+---------------------+
-    | United States      |                  12 |
-    | Russian Federation |                  12 |
-    | India              |                  12 |
-    | China              |                  12 |
     | Canada             |                  12 |
+    | China              |                  12 |
+    | India              |                  12 |
+    | Russian Federation |                  12 |
+    | United States      |                  12 |
     +--------------------+---------------------+
     ```
 
@@ -102,11 +102,11 @@ Vilka länder har inget independentyYear?
     +------------------------+---------------------+
     | country_name           | number_of_languages |
     +------------------------+---------------------+
-    | Pitcairn               |                   1 |
-    | Portugal               |                   1 |
-    | Cuba                   |                   1 |
-    | Uruguay                |                   1 |
+    | Anguilla               |                   1 |
+    | Bermuda                |                   1 |
     | Bosnia and Herzegovina |                   1 |
+    | Cayman Islands         |                   1 |
+    | Cuba                   |                   1 |
     +------------------------+---------------------+
     ```
 
