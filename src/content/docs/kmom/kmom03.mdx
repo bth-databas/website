@@ -1,8 +1,8 @@
 ---
-title: "⚠️ Kmom03: ER intro + CSharp"
-description: XXX.
+title: "Kmom03: ER intro + CSharp"
+description: Vi jobbar vidare med ER-modellering och .
 revision:
-  2026-01-01: (A, mos) Första versionen. 
+  2026-01-31: (A, mos) Första versionen. 
 ---
 
 import Figure from '@components/CustomFigure.astro';
@@ -11,32 +11,22 @@ import YouTube from '@components/YouTube.astro';
 {/* TODO
 * 
 *
-
-TILL KOMMANDE KMOM:
-
-* Serietabeller
-* Användare inloggning, koppling avatar till user
-* Account och flytta mellan konton med transaktioner
-* Order, lagerhantering, fakturering
 */}
 
-:::danger
-Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
-:::
+Vi bekantar oss men en ny databas som heter Classic Models. Databasen innehåller information om ett företag som säljer modellbilar. Vi skall läsa in databasen i vår MariaDB-server och sedan använda både terminalklienten och desktopklienten för att analysera databasens schema och dess innehåll.
 
-Vi jobbar vidare med SQL och tränar mer på utmanande saker som subqueries, JOIN och LEFT/RIGHT OUTER JOIN.
+Du får skapa ett applikationsprogram i terminalen med CSharp som kopplar sig mot databasen och presenterar resultat från databasfrågor.
 
-Du får även skapa ett applikationsprogram i terminalen med CSharp som kopplar sig mot databasen och presenterar resultat från databasfrågor.
-
-Vi övar i hur man modellerar och bygger upp en databas, det som kallas Entity-Relationship modelling, ER-modellering, eller bara databasmodellering. Vi delar in modelleringen i konceptuell, logisk och fysisk modellering. Vi börjar med att fokusera på den konceptuella delen av modelleringen.
+Vi övar i hur man modellerar och bygger upp en databas, det som kallas Entity-Relationship modelling, ER-modellering, eller bara databasmodellering. Vi delar in modelleringen i konceptuell, logisk och fysisk modellering. 
 
 
-
+{/*
 ## Labbmiljö
 
 Installera följande.
 
 1. Programmeringsmiljön för CSharp.
+*/}
 
 
 
@@ -61,7 +51,6 @@ Titta på följande inspelade föreläsningar. Föreläsningarna kan innehålla 
 Läs följande:
 
 1. Databasteknik - om avancerad SQL.
-    * Kap 8: Mer om SQL: Aggregatfunktioner, null-värden, yttre join (främst delen med yttre join)
     * Kap 21: SQL inuti ett program
 
 1. Databasteknik - om ER modellering.
@@ -81,6 +70,7 @@ Kika igenom följande artiklar.
 
 
 
+{/*
 ### Ai som lärare (instuderingsfrågor)
 
 Här finns ett antal instuderingsfrågor som hjälper dig att finna information på egen hand för att träna på de koncept som är relevanta för detta kmom.
@@ -93,6 +83,7 @@ Här finns ett antal instuderingsfrågor som hjälper dig att finna information 
 Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/share/68bafa23-4b84-8005-a745-451d43258c9a). Dina svar kan skifta från de som visas. Var alltid kritisk till dina källor.
 
 </details>
+*/}
 
 
 
@@ -106,15 +97,11 @@ Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/
 
 Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
-1. ⚠️ Övning med classic models.
+1. Jobba igenom övningen "[Övning databasen Classic Models](/website/laromaterial/ovning/classicmodels/)". Övningen hjälper dig igång med en ny databas och undersöka dess schema och innehåll.
 
-1. ⚠️ Övning med CSharp och koppling mot databas.
+1. Jobba igenom övningen "[Övning CSharp med databasen Classic Models](/website/laromaterial/ovning/csharp/)". Övningen hjälper dig igång med CSharp och konstruktioner för att exekvera databasfrågor och ta hand om resultatet.
 
-{/*
-1. Jobba igenom artikeln "[Gör en kommandoradsklient i Node.js (v2)](kunskap/gor-en-kommandoradsklient-i-node-js-v2)". Spara alla filer du gör i `me/kmom03/cli`.
-
-
-Modelleringsövningsuppgifter
+{/* Modelleringsövningsuppgifter
 https://docs.google.com/document/d/1kKoSO2BQL5T2cnzshpM_hnk5JbqT0_00khfGJKZQ2Fo/edit
 
 Gjort modelleringsövning i sal med draw.io: https://goo.gl/vNRvKt */}
@@ -125,7 +112,7 @@ Gjort modelleringsövning i sal med draw.io: https://goo.gl/vNRvKt */}
 
 Följande uppgifter skall utföras och resultatet skall redovisas.
 
-1. ⚠️ Uppgift med CSharp mot classic models, rapporter via menydrivet terminalprogram.
+1. Genomför uppgiften "[Uppgift: CSharp](/website/laromaterial/uppgift/kmom03-csharp/)".
 
 
 
@@ -135,10 +122,12 @@ Läs [instruktionen om hur du skall redovisa](/website/laromaterial/instruktion/
 
 Se till att följande frågor besvaras i din redovisningstext i din rapportsida.
 
-* Några generella reflektioner på att skriva och jobba med menydrivna terminalprogram i JavaScript och Node.js?
+* Hur gick det att jobba med CSharp mot databasen Classic Models, några reflektioner?
 * Berätta om din kodstruktur i ditt terminalprogram mot databasen, är du nöjd eller ser du förbättringspotential?
-* Något att nämna kring det aktuella stycket i guiden skolan med till exempel outer joins och subqueries?
+
 * Hur gick det att jobba med ER-modelleringen, några reflektioner?
+* Ser du likheter eller skillnader mellan databasmodellering och modellering av objekt i objektorienterad programmering?
+
 * Fanns det några extra svårigheter/utmaningar du kämpade med i kursmomentet?
 
 * Vilken är din TIL för detta kmom?
@@ -158,12 +147,11 @@ Följande är en plan för hur lärarteamet _kan_ lägga upp genomgångarna unde
 
 Första timmen:
 
-* Vi fortsätter jobba med databasen "world" och gör en tripple join samt ett antal rapporter.
-* [World database and SQL: Get going](https://gitlab.com/mikael-roos/database/-/tree/main/sql/world/get-going) (jobba igenom sista delen).
+* Övningen med att komma igång med databasen classicmodels.
 
 Andra timmen:
 
-* [World database and SQL: Aggregate and builtin functions](https://gitlab.com/mikael-roos/database/-/tree/main/sql/world/aggregate)
+* Programmera med CSharp mot databasen classicmodels.
 
 
 
