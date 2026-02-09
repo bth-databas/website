@@ -53,9 +53,11 @@ Utför följande krav.
 
 1. Ett konto tillhör en kund. En kund kan ha flera konton.
 
-1. Din databas skall (minst) innehålla kunderna Adam och Eva. Adam skall ha ett konto med 10 bitcoin. Eva skall ha ett konto med 7 bitcoin och ett konto som innehåller 0 bitcoin.
+1. Skissa på ett ER-diagram i puml som visar hur dina tabeller är kopplade. Spara i filen `bank.puml`. 
 
-1. Det skall finnas ett "hemligt konto" som ägs av den hemliga kunden som heter Doe. Detta hemliga kontot fylls på med 0.01 bitcoin varje gång som pengar flyttas mellan konton. Till exempel, om Adam flyttar 1.5 bitcoin till Eva så får Eva bara 1.49 bitcoin och 0.01 bitcoin hamnar på det hemliga kontot.
+1. Din databas skall (minst) innehålla kunderna Adam och Eva. Adam skall ha ett konto 1111 med 10 bitcoin. Eva skall ha ett konto 2222 med 7 bitcoin och ett konto 3333 som innehåller 0 bitcoin.
+
+1. Det skall finnas ett "hemligt konto" 0000 som ägs av den hemliga kunden som heter Doe. Detta hemliga kontot fylls på med 0.01 bitcoin varje gång som pengar flyttas mellan konton. Till exempel, om Adam flyttar 1.5 bitcoin till Eva så får Eva bara 1.49 bitcoin och 0.01 bitcoin hamnar på det hemliga kontot.
 
 1. Använd PRIMARY KEY och FOREIGN KEY i dina tabeller.
 
