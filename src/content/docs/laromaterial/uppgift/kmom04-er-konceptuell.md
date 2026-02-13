@@ -2,6 +2,7 @@
 title: "Uppgift: ER-modellering - konceptuell (kmom04)" 
 description: "Uppgift att göra en konceptuell modellering av en databas."
 revision:
+    "2026-02-13": "(B) Förtydliga att man kan välja vad databasen skall innehålla."
     "2026-02-08": "(A) Första utgåvan."
 sidebar:
     order: 0045
@@ -35,7 +36,7 @@ Missa inte att dokumentera varje steg i ditt ER-dokument.
 
 ## Välj bas för din modellering
 
-Du kan välja bland en av följande upplägg och göra databasmodelleringen utifrån den. Samtliga baseras på grundtanken om en e-shop och det är samma typ av tabeller som krävs, oavsett vilket fokus du väljer.
+Det finns generella krav på databasen som alla skall uppfylla, men därefter kan du anpassa databasen till ditt eget val. Du kan till exempel fylla databasen med den typ av data som du själv vill ha i databasen. På det viset kan du själv välja fokus för din databas, så länge det baseras på grundtanken om en e-shop och att det är den tabellstruktur som krävs för en eshop.
 
 Den databasmodell du nu skapar skall du senare använda för att koppla till ett terminalprogram.
 

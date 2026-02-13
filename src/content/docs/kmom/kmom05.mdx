@@ -1,6 +1,6 @@
 ---
 title: "⚠️ Kmom05: ER logisk + Procedurer"
-description: XXX.
+description: Fortsätt mer ER-modellering och börja använda lagrade procedurer.
 revision:
   2026-01-01: (A, mos) Första versionen. 
 ---
@@ -27,11 +27,11 @@ TILL KOMMANDE KMOM:
 Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
 :::
 
-Vi sluför ER-modellen med fokus på fysisk modellering. Vi skapar SQL-kod som kan skapa databasens schema.
+Vi fortsätter med ER-modellen och översätter den konceptuella modellen till en logisk modell som är anpassad för relationsdatabaser.
 
 Vi tittar på hur man kan programmera i en databas med lagrade procedurer. Dessa konstruktioner ger oss ökade möjligheter att formulera vår SQL-kod i mer avancerade programmeringskonstruktioner.
 
-Det ger oss också möjligheten till inkapsling av SQL-koden och publicera ett API som kan användas av de klienter som vill åt databasen. Detta gör att databaskoden och dess interna representation kan skyddas från klienterna som enbart jobbar mot databasen via ett API bestående av lagrade procedurer.
+Lagrade procedurer ger oss möjligheten till inkapsling av SQL-koden och att vi kan publicera ett API som är tillgängligt till de klienter som vill åt databasen. Detta gör att databaskoden och dess interna representation kan skyddas från klienterna i C# som enbart jobbar mot databasen via ett API bestående av lagrade procedurer.
 
 
 
@@ -77,29 +77,21 @@ __ER-modellering__
     * [Översättning från ER-modellen till relationsmodellen](http://www.databasteknik.se/webbkursen/er2relationer/index.html)
 
 
-{/* FLYTTA TILL VECKAN MED NORMALISERING?
-Det finns ytterligare kapitel i boken som är relaterat till modellering. De går utanför kursens omfattning men läs vid intresse.
-
-1. [Databasteknik](kunskap/boken-databasteknik)
-    * Kap 3: Mer om datamodellering
-    * Kap 12: Normalformer och normalisering
-*/}
-
-
 
 ### Artiklar
 
 Kika igenom följande artiklar.
 
-1. I manualen för MariaDB kan du läsa om lagrade procedurer (stored procedures) och triggers, det är främst följande kapitel som är relevanta, bekanta dig med dem, du kommer att träna på begreppen i kommande övningar.
+1. I manualen för MariaDB kan du läsa om lagrade procedurer (stored procedures), det är främst följande kapitel som är relevanta, bekanta dig med dem, du kommer att träna på begreppen i kommande övningar.
     * [Stored Procedures](https://mariadb.com/kb/en/stored-procedures/)
     * [Stored Procedure Overview](https://mariadb.com/kb/en/stored-procedure-overview/)
     * [TIMESTAMP](https://mariadb.com/kb/en/timestamp/)
 
-1. Fortsätt jobba igenom artikeln "[Kokbok för databasmodellering](https://dbwebb.se/kunskap/kokbok-for-databasmodellering)", den ger dig processen du skall följa. I detta kmom handlar det främst om att fokusera på fysisk modellering.
+1. Fortsätt jobba igenom artikeln "[Kokbok för databasmodellering](https://dbwebb.se/kunskap/kokbok-for-databasmodellering)", den ger dig processen du skall följa. I detta kmom handlar det främst om att fokusera på logisk modellering.
 
 
 
+{/*
 ### Ai som lärare (instuderingsfrågor)
 
 Här finns ett antal instuderingsfrågor som hjälper dig att finna information på egen hand för att träna på de koncept som är relevanta för detta kmom.
@@ -113,6 +105,8 @@ Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/
 
 </details>
 
+*/}
+
 
 
 ## Övningar & Uppgifter
@@ -125,7 +119,9 @@ Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/
 
 Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
-1. ⚠️ Jobba igenom "[Lagrade procedurer i databas](kunskap/lagrade-procedurer-i-databas)" för att lära dig om lagrade procedurer och vad du kan göra med dem.
+1. Jobba igenom "[Lagrade procedurer i databas](/website/laromaterial/ovning/lagrade-procedurer/)" för att lära dig om lagrade procedurer och vad du kan göra med dem.
+
+1. Jobba igenom övningen "[Övning: CSharp med lagrade procedurer](/website/laromaterial/ovning/csharp-stored-procedure/)" för att lära dig hur du använder lagrade procedurer mot databasen från ett CSharp program.
 
 
 
@@ -135,7 +131,7 @@ Följande uppgifter skall utföras och resultatet skall redovisas.
 
 1. ⚠️ Uppgift med lagrade procedurer.
 
-1. ⚠️ Uppgift med ER-modellering (logisk).
+1. Jobba igenom uppgiften "[Uppgift: ER-modellering - logisk (kmom05)](/website/laromaterial/uppgift/kmom05-er-logisk/)".
 
 
 
@@ -168,6 +164,7 @@ Följande är en plan för hur lärarteamet _kan_ lägga upp genomgångarna unde
 Första timmen:
 
 * Övning med lagrade procedurer
+* OUTER JOIN
 
 Andra timmen:
 
