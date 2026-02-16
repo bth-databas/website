@@ -65,7 +65,7 @@ Utför följande krav.
 
 1. Lägg till INSERT för att lägga till minst 5 olika produkter i tabellen.
 
-1. Din databas skall ha en tabell som heter `inventory` som är en fysisk representatio av en produkt som ägs av en customer. Kolumner i tabellen skall vara id, quantity, created_at, updated_at (TIMESTAMPS) samt FK customer_id och produkt_id. När en produkt finns i ett inventory så ägs den av en customer.
+1. Din databas skall ha en tabell som heter `inventory` som är en fysisk representation av en produkt som ägs av en customer. Kolumner i tabellen skall vara id, quantity, created_at, updated_at (TIMESTAMPS) samt FK customer_id och product_id. När en produkt finns i ett inventory så ägs den av en customer.
 
 1. Lägg till INSERT för att lägga till minst 3 olika produkter till varje customer. Det skall finnas minst 2 customers.
 
