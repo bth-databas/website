@@ -1,11 +1,11 @@
 ---
-title: "Övning: Lagrade procedurer i databas" 
-description: "Övning för att använda lagrade procedurer i en databas."
+title: "⚠️ Övning: Lagrade funktioner i databas" 
+description: "Övning för att använda egendefinierade funktioner i databas."
 author: mos
 revision:
-    "2026-02-13": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/lagrade-procedurer-i-databas."
+    "2026-02-16": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/egen-definierade-funktioner-i-databas."
 sidebar:
-    order: 0500
+    order: 0700
 ---
 
 import Figure from '@components/CustomFigure.astro';
@@ -17,11 +17,9 @@ TODO
 * 
 */}
 
-Ibland räcker det inte med enbart SQL utan man behöver någon form av ytterligare programmeringsmässig hantering av informationen. För att ta ett exempel, säg att man vill flytta pengar från ett konto till ett annat, men bara om det finns tillräckligt mycket pengar på kontot.
+Låt oss kika på vad en egendefinierad funktion är, i en databas. Konceptet kallas även UDF som *User Defined Function* och det kan erbjuda en möjlighet att skriva snyggare och mer kraftfull SQL-kod.
 
-Man kan naturligtvis koda detta i godtyckligt externt programmeringsspråk. Men kan det finnas en möjlighet att koda sådant direkt i databasen?
-
-Här kommer lagrade procedurer och "compound statements" till vår hjälp.
+Dagens ämne är alltså egendefinerade funktioner i databasen och det bygger vidare på koncepten om lagrade procedurer och "compund statements".
 
 {/*
 import cs1 from '@assets/databas/csharp/cs1.png';
@@ -36,9 +34,14 @@ import cs1 from '@assets/databas/csharp/cs1.png';
 
 ## Förutsättningar
 
-Artiklen bygger löst vidare på det exemplet som beskrevs i artikeln "[Transaktioner i databas](/website/laromaterial/ovning/transaktioner/)". Du behöver ha tillgång till den databasen med de tabellerna.
+Artikeln bygger på kunskap som du fått i artikeln "[Lagrade procedurer i databas](/website/laromaterial/ovning/lagrade-procedurer/)" och de artiklar som är närliggande.
 
-Exemplet visar hur du jobbar med lagrade procedurer i MySQL/MariaDB.
+Artikeln visar grunderna i [Stored Function](https://mariadb.com/docs/server/server-usage/stored-routines/stored-functions) som kan skrivas med [compund statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
+
+
+:::danger
+Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
+:::
 
 
 
@@ -255,7 +258,7 @@ MariaDB [mydb]> SHOW CREATE PROCEDURE move_money \G
 *************************** 1. row ***************************
            Procedure: move_money
             sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-    Create Procedure: CREATE DEFINER=`dbadm`@`localhost` PROCEDURE `move_money`(
+    Create Procedure: CREATE DEFINER=`maria`@`localhost` PROCEDURE `move_money`(
     p_from_account CHAR(4),
     p_to_account CHAR(4),
     p_amount NUMERIC(4, 2)
@@ -271,10 +274,10 @@ collation_connection: utf8mb3_general_ci
 Du kan se vilket character set och collation som användes och du ser att skaparen är den användare som du är inloggad som.
 
 ```sql title="Vem skapade proceduren?"
-DEFINER=`dbadm`@`localhost`
+DEFINER=`maria`@`localhost`
 ```
 
-Försäkra dig om att du verkligen har "dbadm" som definer. Annars blir det problem vid rättning.
+Försäkra dig om att du verkligen har "maria" som definer. Annars blir det problem vid rättning.
 
 
 

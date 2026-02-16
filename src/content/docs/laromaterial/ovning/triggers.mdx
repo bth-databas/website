@@ -1,11 +1,11 @@
 ---
-title: "Övning: Lagrade procedurer i databas" 
-description: "Övning för att använda lagrade procedurer i en databas."
+title: "⚠️ Övning: Triggers i databas" 
+description: "Övning för att använda triggers i databas."
 author: mos
 revision:
-    "2026-02-13": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/lagrade-procedurer-i-databas."
+    "2026-02-16": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/triggers-i-databas."
 sidebar:
-    order: 0500
+    order: 0600
 ---
 
 import Figure from '@components/CustomFigure.astro';
@@ -17,11 +17,11 @@ TODO
 * 
 */}
 
-Ibland räcker det inte med enbart SQL utan man behöver någon form av ytterligare programmeringsmässig hantering av informationen. För att ta ett exempel, säg att man vill flytta pengar från ett konto till ett annat, men bara om det finns tillräckligt mycket pengar på kontot.
+Ibland vill man att en händelse skall trigga en annan. Säg att man flyttar pengar mellan konton (i en bank) och man vill att varje sådan flytt skall loggas i en loggtabell.
 
-Man kan naturligtvis koda detta i godtyckligt externt programmeringsspråk. Men kan det finnas en möjlighet att koda sådant direkt i databasen?
+En flytt av pengarna, eller en UPDATE av kontotabellen, skall trigga igång en händelse som loggar information till loggtabellen.
 
-Här kommer lagrade procedurer och "compound statements" till vår hjälp.
+Till vår hjälp kommer triggers och det bygger vidare på koncepten om lagrade procedurer och "compund statements".
 
 {/*
 import cs1 from '@assets/databas/csharp/cs1.png';
@@ -36,9 +36,9 @@ import cs1 from '@assets/databas/csharp/cs1.png';
 
 ## Förutsättningar
 
-Artiklen bygger löst vidare på det exemplet som beskrevs i artikeln "[Transaktioner i databas](/website/laromaterial/ovning/transaktioner/)". Du behöver ha tillgång till den databasen med de tabellerna.
+Artikeln bygger på kunskap som du fått i artikeln "[Lagrade procedurer i databas](/website/laromaterial/ovning/lagrade-procedurer/)" och de artiklar som är närliggande.
 
-Exemplet visar hur du jobbar med lagrade procedurer i MySQL/MariaDB.
+Artikeln visar grunderna i [Triggers](https://mariadb.com/docs/server/server-usage/triggers-events/triggers) som kan skrivas med [compund statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
 
 
 
@@ -48,20 +48,20 @@ I ditt kursrepo, skapa följande katalog där du kan spara ditt arbete med denna
 
 ```bash title="Skapa katalog för övningen"
 # Gå till ditt kursrepo
-cd kmom/05
+cd kmom/06
 
 # Skapa en katalog
-mkdir procedure
-cd procedure
+mkdir trigger
+cd trigger
 
 # Öppna katalogen i VS Code
 code .
 ```
 
-Skapa filen `procedure.sql` och lägg in följande kommentar, överst i filen.
+Skapa filen `trigger.sql` och lägg in följande kommentar, överst i filen.
 
-```sql title="procedure.sql"
--- Example code on how to work with stored procedures.
+```sql title="trigger.sql"
+-- Example code on how to work with triggers.
 -- Course: databas
 -- Author: Your Name
 -- Date: ÅÅÅÅ-MM-DD
@@ -71,18 +71,14 @@ Uppdatera med rätt datum och namn.
 
 
 
-## Databasen mydb som exempel
+## Nuvarande exempel
 
-Vi tar samma exempel vi använde i artikeln "Transaktioner i databas". Adam och Eva skall flytta pengar mellan varandra. SQL-koden för exemplet ser ut så här.
-
-Om du inte har databasen så får du gå till den artikeln och använda SQL-koden som finns i den artikeln för att skapa databasen och tabellen.
+Låt oss kika på vårt nuvarande exempel som är en lagrad procedur som flyttar pengar mellan två konton, förutsatt att det finns pengar.
 
 <details>
-<summary>Facit till att skapa databasen för denna övning</summary>
+<summary>Följande kod skapar tabell och innehåll.</summary>
 
-Du kan spara innehållet nedan i en fil `create.sql`.
-
-```sql title="SQL för att skapa databasen som behövs till övningen."
+```sql
 --
 -- Create the database
 --
@@ -119,6 +115,59 @@ SELECT * FROM `account`;
 ```
 
 </details>
+
+Sedan har vi den lagrade proceduren som utför flytten mellan två konton, i skydd av en transaktion. Proceduren du ser här nedan är aningen uppdaterad med ett `MAIN:BEGIN` och `LEAVE MAIN` för att undvika användandet av en ELSE-sats och göra koden mer läsbar. När man ser att det inte finns pengar på kontot kan man direkt avsluta proceduren, [LEAVE](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/leave) kan hjälpa till med det.
+
+```sql
+--
+-- Procedure move_money()
+--
+DROP PROCEDURE IF EXISTS move_money;
+
+DELIMITER ;;
+
+CREATE PROCEDURE move_money(
+    p_from_account CHAR(4),
+    p_to_account CHAR(4),
+    p_amount NUMERIC(4, 2)
+)
+MAIN:BEGIN
+    DECLARE v_current_balance NUMERIC(4, 2);
+
+    START TRANSACTION;
+
+    SELECT `balance` INTO v_current_balance FROM `account` WHERE `id` = p_from_account;
+    -- SELECT p_current_balance;
+
+    IF v_current_balance - p_amount < 0 THEN
+        ROLLBACK;
+        SELECT 'Amount on the account is not enough to make transaction.' AS message;
+        LEAVE MAIN;
+    END IF;
+
+    UPDATE `account` SET `balance` = `balance` - p_amount WHERE `id` = p_from_account;
+    UPDATE `account` SET `balance` = `balance` + p_amount WHERE `id` = p_to_account;
+
+    COMMIT;
+    -- SELECT * FROM account;
+END
+;;
+
+DELIMITER ;
+
+CALL move_money('1111', '2222', 1.5);
+-- SELECT * FROM account;
+```
+
+Låt detta vara vår startpunkt när vi nu går vidare och bygger ut exemplet med en loggtabell.
+
+
+
+:::danger
+Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
+:::
+
+
 
 
 
@@ -255,7 +304,7 @@ MariaDB [mydb]> SHOW CREATE PROCEDURE move_money \G
 *************************** 1. row ***************************
            Procedure: move_money
             sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-    Create Procedure: CREATE DEFINER=`dbadm`@`localhost` PROCEDURE `move_money`(
+    Create Procedure: CREATE DEFINER=`maria`@`localhost` PROCEDURE `move_money`(
     p_from_account CHAR(4),
     p_to_account CHAR(4),
     p_amount NUMERIC(4, 2)
@@ -271,10 +320,10 @@ collation_connection: utf8mb3_general_ci
 Du kan se vilket character set och collation som användes och du ser att skaparen är den användare som du är inloggad som.
 
 ```sql title="Vem skapade proceduren?"
-DEFINER=`dbadm`@`localhost`
+DEFINER=`maria`@`localhost`
 ```
 
-Försäkra dig om att du verkligen har "dbadm" som definer. Annars blir det problem vid rättning.
+Försäkra dig om att du verkligen har "maria" som definer. Annars blir det problem vid rättning.
 
 
 
