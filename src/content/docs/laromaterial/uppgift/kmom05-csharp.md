@@ -61,7 +61,7 @@ Utför följande krav.
 
 1. I katalogen `kmom/05/Bank/sql` spara filen `setup_inventory.sql` där du lägger till ett antal tabeller till databasens schema. Du skall alltså jobba vidare med databasen "bank".
 
-1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för id, name, description, base_price.
+1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
 
 1. Lägg till INSERT för att lägga till minst 5 olika produkter i tabellen.
 
@@ -69,7 +69,7 @@ Utför följande krav.
 
 1. Lägg till INSERT för att lägga till minst 3 olika produkter till varje customer. Det skall finnas minst 2 customers.
 
-1. Det skall finnas en tabell som heter `marketplace` som håller de produkter som är till salu. När en produkt blir tillgänglig så skall den placeras i tabellen marketplace tillsammans med ett pris. Nu är den tillgänglig så att produkten kan köpas av en customer.
+1. Det skall finnas en tabell som heter `marketplace` som håller de produkter som är till salu. När en produkt blir tillgänglig så skall den placeras i tabellen marketplace tillsammans med ett pris. Nu är den tillgänglig så att produkten kan köpas av en customer. Tabellen skall innehålla kolumner för created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
 
 1. När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.
 
