@@ -69,7 +69,7 @@ Utför följande krav.
 
 1. Lägg till INSERT för att lägga till minst 3 olika produkter till varje customer. Det skall finnas minst 2 customers.
 
-1. Det skall finnas en tabell som heter `marketplace` som håller de produkter som är till salu. När en produkt blir tillgänglig så skall den placeras i tabellen marketplace tillsammans med ett pris. Nu är den tillgänglig så att produkten kan köpas av en customer. Tabellen skall innehålla kolumner för created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
+1. Det skall finnas en tabell som heter `marketplace` som håller de produkter som är till salu. När en produkt blir tillgänglig så skall den placeras i tabellen marketplace tillsammans med en quantity och ett pris. Nu är den tillgänglig så att produkten kan köpas av en customer. Tabellen skall innehålla kolumner för created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
 
 1. När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.
 
