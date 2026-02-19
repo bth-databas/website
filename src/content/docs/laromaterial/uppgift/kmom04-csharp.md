@@ -49,7 +49,7 @@ Utför följande krav.
 
 1. Din databas skall ha en tabell som heter `account` som representerar bankkonton. Varje konto har (minst) ett id och en balans.
 
-1. Din databas skall ha en tabell som heter `customer` där kunden har (minst) ett namn och bor på en ort.
+1. Din databas skall ha en tabell som heter `customer` där kunden har (minst) ett namn och bor på en ort. <!-- lägg till epost -->
 
 1. Ett konto tillhör en kund. En kund kan ha flera konton.
 
@@ -71,7 +71,7 @@ När programmet startas så skrivs meny ut. Du kan formattera utskriften av meny
 
 ```text
 $ dotnet run
-menu, help, h      - Print out the menu.
+m, menu, help, h   - Print out the menu.
 customer <search>  - Show all customers or filter by <search>
 account <search>   - Show all accounts (except the secret one) with the customers name
                    - or filter by <search>

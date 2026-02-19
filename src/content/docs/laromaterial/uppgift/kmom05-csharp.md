@@ -9,7 +9,11 @@ sidebar:
 
 Denna uppgift görs som en del av kmom05.
 
-
+<!--
+TODO
+* Ett konto behöver vara transaktionskonto, så det blir tydligt.
+* Borde använda marketplace_id och inventory_id istället för product_id
+-->
 
 ## Förutsättning
 
@@ -59,7 +63,7 @@ swish <amount> <to>
 
 Utför följande krav.
 
-1. I katalogen `kmom/05/Bank/sql` spara filen `setup_inventory.sql` där du lägger till ett antal tabeller till databasens schema. Du skall alltså jobba vidare med databasen "bank".
+1. I filen `kmom/05/Bank/sql/setup.sql`, placerar du all SQL-kod som krävs för att skapa databas, tabeller, innehåll och procedurer. Du skall alltså jobba vidare med databasen "bank".
 
 1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
 
