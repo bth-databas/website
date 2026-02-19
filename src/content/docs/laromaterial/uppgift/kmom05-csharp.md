@@ -73,11 +73,17 @@ Utför följande krav.
 
 1. Lägg till INSERT för att lägga till minst 3 olika produkter till varje customer. Det skall finnas minst 2 customers.
 
-1. Det skall finnas en tabell som heter `marketplace` som håller de produkter som är till salu. När en produkt blir tillgänglig så skall den placeras i tabellen marketplace tillsammans med en quantity och ett pris. Nu är den tillgänglig så att produkten kan köpas av en customer. Tabellen skall innehålla kolumner för created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
+1. Det skall finnas en tabell som heter `marketplace` som erbjuder de produkter som är till salu. Tabellen skall innehålla kolumner för price, created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
 
-1. När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.
+1. Lägg till INSERT så att det finns minst 2 produkter till salu på marketplace.
 
-1. När en customer säljer en produkt till marketplace så får customern pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.
+1. När en customer vill sälja en product så flyttas den från inventory till marketplace och ett price läggs till. Kunden äger fortfarande produkten. Inga pengar byter ägare. Tänk att produkten "annonseras ut" på marketplace.
+
+1. När en customer köper en produkt från marketplace så placeras produkten i kundens inventory. Samtidigt sker en transaktion av pengar från account så att köparen betalar produktens pris till säljaren varav 0.01 pengar flyttas till det hemliga kontot.
+
+1. ~När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.~
+
+1. ~När en customer säljer en produkt till marketplace så får customern pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.~
 
 1. Det får inte bli noll på ett account. 
 
@@ -115,12 +121,12 @@ inventory <customerid>
                 - Show all inventory, or show only the one for a specific customer 
                 - id.
 sell <customerid> <productid> <price>
-                - Sell a product from the customers inventory to the marketplace for
-                - the specified price.
+                - Place a product from the customers inventory to the marketplace for
+                - the specified price, offer to sell it.
 buy <customerid> <productid>
-                - Buy a product from the marketplace to the customers inventory.
+                - Buy a product from the marketplace to the customers inventory, pay for it.
 market <productid> <price>
-                - Add an existing product (from the product table) to the 
+                - Add a new product (from the product table) to the 
                 - marketplace for the specified price.
 ```
 
