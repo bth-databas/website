@@ -17,6 +17,15 @@ Du behöver ha jobbat igenom övningen "Transaktioner i databas" och du behöver
 
 
 
+## Tips
+
+I forumet finns det förslag till hur det kan se ut när uppgiften löses, att kika på de kan ge viss förståelse till hur uppgiften är tänkt att fungera.
+
+1. [Flytta pengar mellan konton och det hemliga kontot](https://github.com/bth-databas/forum/discussions/6)
+1. [Swisha till ett konto, exempel på flödet](https://github.com/bth-databas/forum/discussions/7)
+
+
+
 ## Krav - CSharp
 
 Utför följande krav.
@@ -49,17 +58,19 @@ Utför följande krav.
 
 1. Din databas skall ha en tabell som heter `account` som representerar bankkonton. Varje konto har (minst) ett id och en balans.
 
-1. Din databas skall ha en tabell som heter `customer` där kunden har (minst) ett namn och bor på en ort. <!-- lägg till epost -->
+1. Din databas skall ha en tabell som heter `customer` där kunden har (minst) ett namn, epost och bor på en ort.
 
 1. Ett konto tillhör en kund. En kund kan ha flera konton.
 
-1. Skissa på ett ER-diagram i puml som visar hur dina tabeller är kopplade. Spara i filen `bank.puml`. 
+1. Skissa på ett ER-diagram i puml som visar hur dina tabeller är kopplade. Spara i filen `bank.puml`.
 
 1. Din databas skall (minst) innehålla kunderna Adam och Eva. Adam skall ha ett konto 1111 med 10 bitcoin. Eva skall ha ett konto 2222 med 7 bitcoin och ett konto 3333 som innehåller 0 bitcoin.
 
-1. Det skall finnas ett "hemligt konto" 0000 som ägs av den hemliga kunden som heter Doe. Detta hemliga kontot fylls på med 0.01 bitcoin varje gång som pengar flyttas mellan konton. Till exempel, om Adam flyttar 1.5 bitcoin till Eva så får Eva bara 1.49 bitcoin och 0.01 bitcoin hamnar på det hemliga kontot.
+1. Det skall finnas ett "hemligt konto" 0000 som ägs av den hemliga kunden som heter Doe. Detta hemliga kontot fylls på med 0.01 bitcoin varje gång som pengar flyttas mellan konton. Till exempel, om Adam flyttar 1.5 bitcoin till Eva så får Eva bara 1.49 bitcoin och 0.01 bitcoin hamnar på det hemliga kontot. Detta gäller även när pengar swishas.
 
 1. Använd PRIMARY KEY och FOREIGN KEY i dina tabeller.
+
+1. Det är okey om det blir mindre än 0 i balans på ett konto.
 
 
 
@@ -69,33 +80,28 @@ Skapa en menydriven applikation C# som ser ut så här för användaren.
 
 När programmet startas så skrivs meny ut. Du kan formattera utskriften av menyn efter dina egna tankar.
 
+
 ```text
 $ dotnet run
-m, menu, help, h   - Print out the menu.
-customer <search>  - Show all customers or filter by <search>
-account <search>   - Show all accounts (except the secret one) with the customers name
-                   - or filter by <search>
-move               - Move 1.5 bitcoin from Adam to Eva (do not forget the secret account)
-move <amount> <from> <to>
-                   - Move a flexible amount of bitcoin from one account to another account
-                   - (do not forget the secret account)
-swish <amount> <to>
-                   - Add <amount> to the account <to>, do not forget to take 0.01 bitcoin 
-                   - as a transaction fee and put inot the secret account. 
-secret             - Show the balance of the secret account with the name of the owner of
-                   - the account.
-quit, q            - Quit the application
+m, menu, help, h          - Print out the menu.
+customer <search>         - Show all customers or filter by <search>
+account <search>          - Show all accounts with the customers name, filter by <search>
+move                      - Move 1.5 bitcoin from Adam to Eva
+move <amount> <from> <to> - Move a flexible amount of bitcoin from one account to another account
+swish <amount> <to>       - Add <amount> to the account <to> 
+secret                    - Show the balance of the secret account with the name of the owner
+quit, q                   - Quit the application
 
 > 
 ```
 
-Programmet väntar därefter på användarens inmatning. Om användaren skriver menu visas menytexten. Om användaren skriver quit eller q avslutas applikationen.
+Programmet börjar med att menyn skrivs ut och därefter väntar på användarens inmatning. Det som visas som "> " är prompten och därefter kan användaren skriva in det kommando som avses.
 
-När man söker/filtrerar så skall det stödjas att man söker på kontonumret, kundens namn, kundens ort.
+Om användaren skriver menu eller m visas menytexten. Om användaren skriver quit eller q avslutas applikationen.
+
+När man söker/filtrerar så skall det stödjas att man söker på delsträngar i samtliga kolumner (som är relevanta).
 
 Bygg stöd för samtliga menyval ovan.
-
-Det är okey om det blir mindre än 0 i balans på ett konto.
 
 
 

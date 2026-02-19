@@ -41,7 +41,7 @@ Utför följande krav.
 
 Utför följande krav.
 
-1. I katalogen `kmom/05/Bank/sql` skapar du filen `procedure_account.sql`.
+1. I filen `kmom/05/Bank/sql/setup.sql`, placerar du all SQL-kod som krävs för att skapa databas, tabeller, innehåll och procedurer. Du skall alltså jobba vidare med databasen "bank".
 
 1. Skapa lagrade procedurer för att flytta pengar mellan konton samt för att swisha till ett konto.
 
@@ -63,8 +63,6 @@ swish <amount> <to>
 
 Utför följande krav.
 
-1. I filen `kmom/05/Bank/sql/setup.sql`, placerar du all SQL-kod som krävs för att skapa databas, tabeller, innehåll och procedurer. Du skall alltså jobba vidare med databasen "bank".
-
 1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
 
 1. Lägg till INSERT för att lägga till minst 5 olika produkter i tabellen.
@@ -80,6 +78,8 @@ Utför följande krav.
 1. När en customer vill sälja en product så flyttas den från inventory till marketplace och ett price läggs till. Kunden äger fortfarande produkten. Inga pengar byter ägare. Tänk att produkten "annonseras ut" på marketplace.
 
 1. När en customer köper en produkt från marketplace så placeras produkten i kundens inventory. Samtidigt sker en transaktion av pengar från account så att köparen betalar produktens pris till säljaren varav 0.01 pengar flyttas till det hemliga kontot.
+
+1. Uppdatera din tabell `account` så att den innehåller en type, som anger vilken typ av konto det är. Varje kund har alltid ett (och endast ett) transaktionskonto. Om en kund har fler konton så är dessa sparkonton (savings) eller någon annan typ. När en transaktion sker på marketplace så sker den alltid via kundernas transaktionskonton.
 
 1. ~När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.~
 
