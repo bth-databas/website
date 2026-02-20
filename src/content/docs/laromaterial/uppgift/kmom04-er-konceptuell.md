@@ -10,7 +10,7 @@ sidebar:
 
 Denna uppgift görs som en del av kmom04.
 
-Du skall jobba med databasmodellering och skapa en ER-modell av en databas som du själv väljer efter ett par förslag som erbjuds.
+Du skall jobba med databasmodellering och skapa en ER-modell av en databas.
 
 Detta är första delen av uppgiften och du skall utföra den konceptuella modelleringsfasen.
 

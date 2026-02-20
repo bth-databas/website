@@ -7,9 +7,9 @@ sidebar:
     order: 0055
 ---
 
-Denna uppgift görs som en del av kmom05.
+Denna uppgift görs som en del av kmom05. Du jobbar vidare på den uppgiften som startade i kmom04.
 
-Du skall jobba med databasmodellering och skapa en ER-modell av en databas som du själv väljer efter ett par förslag som erbjuds.
+Du skall jobba med databasmodellering och skapa en ER-modell av en databas.
 
 Detta är andra delen av uppgiften och du skall utföra den logiska modelleringsfasen.
 

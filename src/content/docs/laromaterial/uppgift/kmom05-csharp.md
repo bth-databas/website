@@ -83,7 +83,7 @@ TODO
 ```text
 $ dotnet run
 marketplace <search>   - Show all products on the marketplace or filter by <search>
-product <search>       - Show all products in the product catalogueor or filter by <search>
+product <search>       - Show all products in the product catalogue or filter by <search>
 inventory <search>     - Show all inventory or filter by <search>
 
 sell <customerid> <inventoryid> <price> - Move a product from the customers inventory to the 
@@ -138,7 +138,7 @@ buy <customerid> <productid>          - Buy a product from the marketplace to th
 
 </details>
 
-Fortsätt att läsa för att förstå hur din databas skall byggas upp för att stödja ditt terminalprograms menyval.
+Fortsätt att läsa för att förstå hur din databas skall byggas upp för att stödja menyvalen ovan.
 
 
 
@@ -210,6 +210,6 @@ I uppdateringen så sker inget utbyte av pengar förrän varan köps av en kund.
 
 ## Avslutningsvis
 
-Glöm inte kontroller att lintern passerar.
+Glöm inte kontrollera att lintern passerar.
 
 Fundera på om din kod är DRY eller om det finns delar som du kan förbättra.

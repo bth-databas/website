@@ -90,4 +90,4 @@ När du är helt klar med detta kursmomentet så lämnar du in genom att göra e
 
 ## Avslutningsvis
 
-Glöm inte kontroller att lintern passerar.
+Glöm inte kontrollera att lintern passerar.

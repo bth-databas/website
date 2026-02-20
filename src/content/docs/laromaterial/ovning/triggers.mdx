@@ -1,9 +1,9 @@
 ---
-title: "⚠️ Övning: Triggers i databas" 
+title: "Övning: Triggers i databas" 
 description: "Övning för att använda triggers i databas."
 author: mos
 revision:
-    "2026-02-16": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/triggers-i-databas."
+    "2026-02-20": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/triggers-i-databas."
 sidebar:
     order: 0600
 ---
@@ -39,6 +39,12 @@ import cs1 from '@assets/databas/csharp/cs1.png';
 Artikeln bygger på kunskap som du fått i artikeln "[Lagrade procedurer i databas](/website/laromaterial/ovning/lagrade-procedurer/)" och de artiklar som är närliggande.
 
 Artikeln visar grunderna i [Triggers](https://mariadb.com/docs/server/server-usage/triggers-events/triggers) som kan skrivas med [compund statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
+
+
+
+## Om trigger
+
+I denna artikeln lär vi oss om trigger. Du kan läsa [om triggers i MariaDB docs](https://mariadb.com/docs/server/server-usage/triggers-events/triggers).
 
 
 
@@ -159,560 +165,345 @@ CALL move_money('1111', '2222', 1.5);
 -- SELECT * FROM account;
 ```
 
-Låt detta vara vår startpunkt när vi nu går vidare och bygger ut exemplet med en loggtabell.
-
-
-
-:::danger
-Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
-:::
-
-
-
-
-
-## Att skriva små program i databasen
-
-Databasen MariaDB stödjer något de kallar [Compound Statements](https://mariadb.com/kb/en/programmatic-compound-statements/) som är det "programmeringsspråk" som används för att skriva lagrade procedurer och liknande konstruktioner (egen-definierade funktioner och trigger). Compound statements kan liknas med traditionell programmeringskod med variabler och loopar som kan interagera med ren SQL-kod.
-
-Detta ger oss en möjlighet att skriva små program i databasen. Dessa program lagras i databasen, de blir till en del av själva databasen.
-
-Låt oss kika på hur en lagrad procedur kan se ut, skriven med SQL och compound statements.
-
-
-
-## Exempel på transaktion
-
-I artikeln om transaktioner så använde vi följande kod för att flytta pengar mellan konton.
-
-```sql title="Flytt av pengar med SQL inom en transaktion."
---
--- Move the money, within a transaction
---
-START TRANSACTION;
-
-SET @amount = 1.5;
-SET @from = '1111';
-SET @to   = '2222';
-
-UPDATE `account` SET `balance` = `balance` - @amount WHERE `id` = @from;
-UPDATE `account` SET `balance` = `balance` + @amount WHERE `id` = @to;
-
-COMMIT;
-```
-
-Det vi nu vill göra är att uppdatera koden så att den tar hänsyn till att det inte kan bli 0 på ett konto. Om det kan bli det så skall vi göra en ROLLBACK av transaktionen och flytten av pengar skall inte genomföras.
-
-Vi kan dock inte använda en IF-sats i vanlig SQL och därför behöver vi en konstruktion av "compund statement" och det är något vi kan skriva inom ramen för en lagrad procedur.
-
-Låt oss se hur det kan se ut.
-
-
-
-## En lagrad procedur för att flytta pengar
-
-Vi kan egentligen bara flytta pengar om det finns några pengar på kontot. Vi behöver kontrollera om Adam har så mycket pengar på kontot som han nu är benägen att flytta till Eva.
-
-Vi gör en lagrad procedur som flyttar pengarna, förutsatt att de finns. Principen blir följande:
-
-1. Starta transaktionen.
-1. Kolla om pengar finns på kontot
-    1. Läs hur mycket pengar som finns på kontot
-    1. Gör en IF-sats för att kolla att det är tillräckligt med pengar
-        1. Gör ROLLBACK om det inte finns tillräckligt med pengar
-1. Flytta pengarna
-1. Allt måste ske inom en och samma transaktion
-    1. Gör COMMIT.
-
-
-
-### Delimiter 
-
-För att skapa en lagrad procedur så omsluter vi dess kod på följande sätt, med en [`CREATE PROCEDURE`](https://mariadb.com/docs/server/server-usage/stored-routines/stored-procedures/create-procedure).
+Kontrollera att din kod fungerar innan du går vidare.
 
 ```sql
---
--- Procedure move_money()
---
-DROP PROCEDURE IF EXISTS move_money;
-
-DELIMITER ;;
-
-CREATE PROCEDURE move_money(
-    -- Here comes the definition of the parameters
-)
-    -- Here comes SQL and compund statements
-;;
-
-DELIMITER ;
-```
-
-Koden ändrar *delimiter* för att koden inuti den lagrade proceduren inte skall krocka med det semikolon som avslutar själva proceduren. Det finns även [beskrivet i manualen "Stored Procedure Overview"](https://mariadb.com/docs/server/server-usage/stored-routines/stored-procedures/stored-procedure-overview) om varför man gör så här.
-
-Det ar viktig att se hur du först gör `DELIMITER ;;` innan du påbörjar skapandet av proceduren, sedan avslutas proceduren med `;;` och därefter går du direkt tillbaka till `DELIMITER ;` (som vanligt).
-
-Se dessa DELIMITER som en naturlig del av skapandet av din procedur.
-
-
-
-### Parametrar och body
-
-Proceduren tar tre parametrar som säger från-konto, till-konto och summan som skall flyttas.
-
-Låt oss göra en minimal procedur för att anropa den, som ett litet test.
-
-```sql
-DROP PROCEDURE IF EXISTS move_money;
-
-DELIMITER ;;
-
-CREATE PROCEDURE move_money(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
-)
-BEGIN
-    SELECT p_from_account, p_to_account, p_amount;
-END
-;;
-
-DELIMITER ;
-```
-
-Notera att procedurens parameterlista har samma datatyper som vi är vana vid från kolumnerna i tabeller.
-
-Vi väljer att lägga ett `p_` framför varje parameter så att vi på det viset kan ha koll på om det är en parameter.
-
-Du kan nu skapa proceduren med koden ovan, den skall fungera.
-
-Glöm inte DELIMITER, jag kommer inte att visa dem i kommande exempel.
-
-
-
-### SHOW CREATE PROCEDURE
-
-Du kan verifiera att proceduren skapades med följande kommandon.
-
-```sql title="Visa hur proceduren är skapad."
-SHOW CREATE PROCEDURE move_money \G
-```
-
-Det kan se ut så här.
-
-```sql title="Exempel på hur proceduren kan vara skapad."
-MariaDB [mydb]> SHOW CREATE PROCEDURE move_money \G
-*************************** 1. row ***************************
-           Procedure: move_money
-            sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-    Create Procedure: CREATE DEFINER=`maria`@`localhost` PROCEDURE `move_money`(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
-)
-BEGIN
-    SELECT p_from_account, p_to_account, p_amount;
-END
-character_set_client: utf8mb3
-collation_connection: utf8mb3_general_ci
-  Database Collation: utf8mb4_unicode_ci
-```
-
-Du kan se vilket character set och collation som användes och du ser att skaparen är den användare som du är inloggad som.
-
-```sql title="Vem skapade proceduren?"
-DEFINER=`maria`@`localhost`
-```
-
-Försäkra dig om att du verkligen har "maria" som definer. Annars blir det problem vid rättning.
-
-
-
-### Anropa en lagrad procedur
-
-Procedurens body är nu på plats, inom ramen av `BEGIN` och `END`. I detta fallet är det en SELECT-sats som kommer att "skriva ut", eller producera, det resultset som blir resultatet från SELECT-satsen.
-
-Då anropar vi proceduren.
-
-```sql title="Anrop till en lagrad procedur."
-CALL move_money('1111', '2222', 1.5);
-```
-
-Så här kan det se ut i terminalen.
-
-```sql title="Så här ser det ut i terminalen när anropet sker."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+----------------+--------------+----------+
-| p_from_account | p_to_account | p_amount |
-+----------------+--------------+----------+
-| 1111           | 2222         |     1.50 |
-+----------------+--------------+----------+
-1 row in set (0,000 sec)
-
-Query OK, 0 rows affected (0,000 sec)
-```
-
-Resultatet blir att parametrarna skrivs ut i SQL-satsen, som en form av resultat från proceduren. En enkel procedur kan alltså vara att samla en eller flera SELECT-satser och skriva ut dem.
-
-Bra, då kan vi skapa och anropa en lagrad procedur, och även skicka parametrar till den. Det är en god start.
-
-
-
-### Procedur för move_money
-
-Då plockar vi in koden som flyttar pengarna, in i proceduren. Det kan se ut så här. Det är alltså koden inom BEGIN / END som ändrar sig.
-
-```sql
-CREATE PROCEDURE move_money(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
-)
-BEGIN
-    START TRANSACTION;
-
-    UPDATE account SET balance = balance - p_amount WHERE id = p_from_account;
-    UPDATE account SET balance = balance + p_amount WHERE id = p_to_account;
-
-    COMMIT;
-
-    SELECT * FROM account;
-END
-;;
-```
-
-Ovan SQL-kod flyttar pengar från ett konto till ett annat, inom ramen för en transaktion.
-
-Nu kan jag anropa proceduren, om och om igen. Om jag kör den tillräckligt många gånger så kommer Eva att bli riktigt rik och Adam motsvarande fattig.
-
-```sql
-CALL move_money('1111', '2222', 1.5);
-```
-
-Att jag väljer att skriva ut behållningen i slutet med SELECT-satsen är (för tillfället) bara för att det skall vara enklare att utveckla, det blir lite som en `console.log()` eller `echo`. Det är alltså en variant av hur man kan debugga sin lagrade procedur.
-
-Så här långt har vi skapat en lagrad procedur som omsluter en större kodsekvens som jag troligen vill utföra många gånger. Det blir som ett API mot min databas. Om man vill flytta pengar mellan konton så är det rätta sättet att göra det via den lagrade proceduren, inte att skriva egen SQL-kod. Lagrade procedurer kan alltså vara ett sätt att bygga API mot databasen.
-
-Kom ihåg att koden för lagrade procedurer inte nödvändigtvis är kompatibel mellan olika databasmotorer. Det kan vara en nackdel, eller inte.
-
-Provkör din lagrade procedur så att du vet att den fungerar. Anrop atillräckligt många gånger så att det blir minus på Adams konto.
-
-```sql title="Nu är det minus hos Adam."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
+MariaDB [mydb]> SELECT * FROM account;
 +------+------+---------+
 | id   | name | balance |
 +------+------+---------+
-| 1111 | Adam |   -0.50 |
-| 2222 | Eva  |   17.50 |
+| 1111 | Adam |   10.00 |
+| 2222 | Eva  |    7.00 |
 +------+------+---------+
-```
+2 rows in set (0,000 sec)
 
-
-
-## Kolla om pengar finns
-
-Då skall vi se om vi kan uppdatera den lagrade proceduren för att kontrollera att det verkligen finns pengar på kontot, innan flyttan av pengar utförs.
-
-Det första jag vill ha är en lokal variabel som jag tänker fylla med nuvarande balans på kontot. Om balansen inte är tillräcklig så kommer jag att avbryta transaktionen med en ROLLBACK.
-
-
-
-### Lokal variabel
-
-Låt oss börja kika på den lokala variabeln `v_current_balance` och hur den får sitt värde. Notera att jag väljer att användaa prefix `v_` för lokala variabler.
-
-```sql
-BEGIN
-    DECLARE v_current_balance NUMERIC(4, 2);
-
-    START TRANSACTION;
-
-    SELECT balance INTO v_current_balance 
-        FROM account 
-        WHERE id = p_from_account 
-        FOR UPDATE;
-
-    SELECT v_current_balance;
-
-    -- Some code omitted
-END
-;;
-```
-
-Notera att variabeln  får sitt värde inuti transaktionen, all kod, även testet om det finns pengar från kontot, måste dra nytta av transaktionens atomära princip och att transaktioner är isolerade från varandra. Vi måste dock använda `FOR UPDATE` i samband med SELECT-satsen för att signalera att datan används inom ramen för transaktionen tillsammans med en UPDATE sats.
-
-Om man kör den uppdaterade proceduren i sin helhet så kan man se att det är två SELECT som skrivs ut från den.
-
-```sql title="Två utskrifter från proceduren."
 MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+-------------------+
-| v_current_balance |
-+-------------------+
-|             -3.50 |
-+-------------------+
-1 row in set (0,000 sec)
+Query OK, 3 rows affected (0,002 sec)
 
+MariaDB [mydb]> SELECT * FROM account;
 +------+------+---------+
 | id   | name | balance |
 +------+------+---------+
-| 1111 | Adam |   -5.00 |
-| 2222 | Eva  |   22.00 |
-+------+------+---------+
-```
-
-Det första som skrivs ut är den nuvarande balansen och den andra är resultatet efter att flytten är utförd.
-
-
-
-### IF-sats
-
-Då kan vi skapa en if-sats [`IF.. ELSE.. END IF`](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/if), med compound statement, som kontrollerar om nuvarande balansen är tillräcklig för att flytta pengarna.
-
-```sql
-BEGIN
-    -- Some code omitted
-
-    IF v_current_balance - p_amount < 0 THEN
-        ROLLBACK;
-        SELECT 'Amount on the account is not enough to make transaction.' AS message;
-    ELSE
-        UPDATE account SET balance = balance - p_amount WHERE id = p_from_account;
-        UPDATE account SET balance = balance + p_amount WHERE id = p_to_account;
-        COMMIT;
-    END IF;
-
-    SELECT * FROM account;
-END
-;;
-```
-
-Jag valde att omsluta koden i IF-satsen, det finns nämligen ingen `RETURN` i en lagrad procedur, vilket hade varit ett alternativ när man väl förstod att transaktionen inte kunde utföras. Men, om man läser manualen noga så finner man [`LEAVE`](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/leave) vilket skulle kunna göra koden för den lagrade proceduren, aningen snyggare genom att undvika ELSE delen. Pröva gärna det på egen hand.
-
-När man provkör den uppdaterade proceduren kan det se ut så här.
-
-```sql title="Misslyckas att flytta pengar."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+-------------------+
-| v_current_balance |
-+-------------------+
-|             -5.00 |
-+-------------------+
-1 row in set (0,000 sec)
-
-+----------------------------------------------------------+
-| message                                                  |
-+----------------------------------------------------------+
-| Amount on the account is not enough to make transaction. |
-+----------------------------------------------------------+
-1 row in set (0,000 sec)
-
-+------+------+---------+
-| id   | name | balance |
-+------+------+---------+
-| 1111 | Adam |   -5.00 |
-| 2222 | Eva  |   22.00 |
+| 1111 | Adam |    8.50 |
+| 2222 | Eva  |    8.50 |
 +------+------+---------+
 2 rows in set (0,000 sec)
 ```
 
-Här ser man att det är negativ balans på kontot och det blir då ROLLBACK i transaktionen. Själva utskrifterna från proceduren är mest för att visualisera vad som händer, så att vi kan följa flödet.
-
-
-## Compound statement
-
-Ovan är DECLARE och IF-sats är exempel på kod som är ett compound statement. För att se fler konstruktioner som går att använda så har manualen ett stycke om [Programmatic & Compound Statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
-
-Du kan läsa om variabler, hur de kan deklareas, sättas med ett hårdkodat värde eller få ett värde från en SQL-sats.
-
-Du kan läsa om loop-konstruktioner, if-satser och case.
-
-Det är helt enkelt ett eget programmeringsspråk, inuti databasen.
+Låt detta vara vår startpunkt när vi nu går vidare och bygger ut exemplet med en loggtabell.
 
 
 
-## Lokala variabler 
+## En tabell för loggar
 
-Innan vi går vidare så vill jag visa konceptet med lokala variabler och hur man även kan använda det för att mellanlagra information i ett SQL-skript. Detta handlar alltså inte enbart om compound statements, utan även om hantering av variabler i traditionell SQL-kod.
+Tanken är att vi har en tabell som loggar alla förändringar i tabellen account. På det viset kan man se samtliga förändringar i balansen och återskapa alla transaktioner som skett.
 
-Man kan sätta värdet på en lokal variabel, inuti ett SQL-skript, och använda det på följande sätt.
+Det kan vara bra att ha om något går snett. Som felsökning och extra kontroll. Det låter som en bra grej, speciellt när pengar eller känslig data är inblandad.
+
+Vi skapar en loggtabell.
 
 ```sql
 --
--- Define and use local variable
+-- Log table
 --
-SET @answer = 42;
-SELECT @answer;
+DROP TABLE IF EXISTS `account_log`;
+CREATE TABLE `account_log`
+(
+    `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
+    `when` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `what` VARCHAR(20),
+    `account` CHAR(4),
+    `balance` DECIMAL(4, 2),
+    `amount` DECIMAL(4, 2)
+);
+
+-- DELETE FROM account_log;
+SELECT * FROM account_log;
 ```
 
-Kör man koden ovan så ser det ut så här.
+Det blir en tabell med autoincrementerande id och en kolumn som automatiskt, via `DEFAULT CURRENT_TIMESTAMP`, loggar en tidsstämpel för när en rad läggs till i tabellen. I övrigt så loggar vi en anledning till förändringen tillsammans med kontot och det belopp som förändras.
+
+Tanken är alltså att logga information som text och siffror. Vi har inga relationer till några tabeller eller FK.
+
+Bra, då är det bara att börja logga.
+
+
+
+## Logga med SQL i den lagrade proceduren
+
+Bara som ett exempel, innan jag visar triggern, så visar jag hur jag kan utföra loggningen i den lagrade proceduren, med en sedvanlig INSERT.
+
+Det handlar om att utföra följande INSERT inom ramen för den lyckade transaktionen.
 
 ```sql
-mysql> SET @answer = 42;
-Query OK, 0 rows affected (0.00 sec)
-
-mysql> SELECT @answer;
-+---------+
-| @answer |
-+---------+
-|      42 |
-+---------+
-1 row in set (0.00 sec)
+INSERT INTO
+    `account_log` (`what`, `account`, `amount`)
+VALUES
+    ('move_money from', p_from_account, -p_amount),
+    ('move_money to', p_to_account, p_amount)
+;
 ```
 
-Man kan också tilldela en variabel ett resultat från en SELECT-fråga.
+Det är en enkel INSERT-sats som lägger till två rader i logg-tabellen, en rad för varje förändring som gjorts. En rad för kontot som minskar och en rad för kontot som ökar. I den lagrade proceduren kan jag placera koden direkt innan COMMIT.
+
+Här väljer jag att inte logga nuvarande balans för respektive konton, det hade krävt att jag läste av balansen på kontona i en SELECT-sats.
+
+Jag vill logga saker, men inte krångla alltför mycket.
+
+Uppdatera din procedur och provkör den för att se om du får något som loggas.
+
+Så här ser det ut för mig när jag tittar i loggtabellen.
+
+```sql
+MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
+Query OK, 5 rows affected (0,004 sec)
+
+MariaDB [mydb]> SELECT * FROM account_log;
++----+---------------------+-----------------+---------+---------+--------+
+| id | when                | what            | account | balance | amount |
++----+---------------------+-----------------+---------+---------+--------+
+|  1 | 2026-02-20 13:40:20 | move_money from | 1111    |    NULL |  -1.50 |
+|  2 | 2026-02-20 13:40:20 | move_money to   | 2222    |    NULL |   1.50 |
++----+---------------------+-----------------+---------+---------+--------+
+2 rows in set (0,000 sec)
+```
+
+Då kikar vi på hur man gör samma loggningen, men med en trigger.
+
+
+
+## Logga med triggers
+
+Låt oss nu se hur vi kan göra samma sak med en databastrigger. Vi kopplar en trigger till account-tabellen och vid varje UPDATE på account så lägger vi till en ny rad i account_log.
+
+En trigger är likt en lagrad procedur ett objekt som sparas i databasen och skapas, redigeras och raderas med CREATE, DROP och ALTER.
 
 ```sql
 --
--- Set local variable from a resultset
+-- Trigger for logging updating balance
 --
-SET @answer = (SELECT 42);
-SELECT @answer;
+DROP TRIGGER IF EXISTS `log_balance_update`;
+
+CREATE TRIGGER `log_balance_update`
+AFTER UPDATE
+ON `account` FOR EACH ROW
+    INSERT INTO `account_log` (`what`, `account`, `balance`, `amount`)
+        VALUES ('trigger', NEW.id, NEW.balance, NEW.balance - OLD.balance);
 ```
+
+När du har skapat din trigger enligt ovan så kan du se att den körs, genom att anropa din procedur.
+
+```sql
+CALL move_money('1111', '2222', 1.5);
+```
+
+Utskriften från loggtabellen kan se ut så här.
+
+```sql
+MariaDB [mydb]> SELECT * FROM account_log;
++----+---------------------+-----------------+---------+---------+--------+
+| id | when                | what            | account | balance | amount |
++----+---------------------+-----------------+---------+---------+--------+
+|  1 | 2026-02-20 13:54:31 | trigger         | 1111    |    5.50 |  -1.50 |
+|  2 | 2026-02-20 13:54:31 | trigger         | 2222    |   11.50 |   1.50 |
+|  3 | 2026-02-20 13:54:31 | move_money from | 1111    |    NULL |  -1.50 |
+|  4 | 2026-02-20 13:54:31 | move_money to   | 2222    |    NULL |   1.50 |
++----+---------------------+-----------------+---------+---------+--------+
+4 rows in set (0,000 sec)
+```
+
+Vi har nu dubbel loggning, dels av INSERT i den lagrade proceduren och dels av triggern. Vi kan se de två raderna som är införda av triggern och där finns även balansen införd.
+
+Du bör nu uppdatera din procedur och kommentera bort raden för `INSERT INTO account_log` så att du undviker dubbla rader i loggtabellen. Det räcker att triggern sköter loggningen.
+
+
+
+## Om triggers
+
+Låt oss studera koden för den trigger vi nyss skapat.
+
+```sql
+CREATE TRIGGER `log_balance_update`
+AFTER UPDATE
+ON `account` FOR EACH ROW
+    INSERT INTO `account_log` (`what`, `account`, `balance`, `amount`)
+        VALUES ('trigger', NEW.id, NEW.balance, NEW.balance - OLD.balance);
+```
+
+Vad vi ser är en trigger som kommer utföras varje gång någon gör UPDATE på tabellen account, se konstruktionen `UPDATE ON account`. Triggern "ligger i bakgrunden" och databashanterraren sköter själv om kopplingen mellan triggern `log_balance_update` och tabellen `account`.
+
+När det sker en UPDATE på tabellen `account` så kommer triggern att anropas, i bakgrunden, internt av databashanteraren. I vårt fall anropas triggern `AFTER UPDATE`. Man kan också konstruera en trigger som anropas `BEFORE UPDATE` vilket kan vara bra om man vill kontrollera värden innan själva uppdateringen sker.
+
+Förutom `UPDATE` så kan man även skapa triggers som är kopplade till `INSERT` och `DELETE` mot en tabell. I samtliga fall väljer du om du vill göra `BEFORE` eller `AFTER`.
+
+Triggern får indata som är samtliga rader som är på gång att uppdateras, det kan vara en eller flera rader som uppdateras på en gång. Triggern hanterar samliga rader, det är innebörden av `FOR EACH ROW`. Du kan se det som en loop som loopar genom varje rad som håller på att uppdateras.
+
+När man är inne i triggern, inuti loopen, så har man tillgång till den nya raden `NEW` som är den som skall bli, man har också tillgång till den gamla raden `OLD`, den befintliga raden som är på väg att uppdateras.
+
+Du kan se `OLD` som raden innan UPDATE utförs och `NEW` som raden efter att UPDATE är utförd.
+
+I en INSERT trigger har man enbart tillgång till `NEW` och i en DELETE trigger når man endast `OLD`. Men det kanske säger sig självt, om man funderar lite på det. Vad skulle `OLD` innehålla i en INSERT trigger liksom vad skulle `NEW` innehålla i en DELETE trigger. 
+
+
+
+## Trigger med compound statement
+
+I vår trigger ovan utförde vi enbart en INSERT sats. Vi kan också använda compound statements för att bygga kod likt vi gjorde i den lagrade proceduren. Det kan vara bra om vi behöver en mer avancerad konstruktion för triggern.
 
 Det kan se ut så här.
 
 ```sql
-mysql> SET @answer = (SELECT 42);
-Query OK, 0 rows affected (0.01 sec)
-
-mysql> SELECT @answer;
-+---------+
-| @answer |
-+---------+
-|      42 |
-+---------+
-1 row in set (0.00 sec)
-```
-
-Man kan också köra en `SELECT...INTO` som kan lagra information från flera kolumner in i variabler.
-
-```sql
 --
--- Select mutiple into variables
+-- Trigger with compound statement
 --
-SELECT 1, 2 INTO @a, @b;
-SELECT @a, @b;
-```
+DROP TRIGGER IF EXISTS trigger_test1;
 
-Det kan se ut så här när man kör det.
+DELIMITER ;;
 
-```sql
-mysql> SELECT 1, 2 INTO @a, @b;
-Query OK, 1 row affected (0.00 sec)
-
-mysql> SELECT @a, @b;
-+------+------+
-| @a   | @b   |
-+------+------+
-|    1 |    2 |
-+------+------+
-1 row in set (0.00 sec)
-```
-
-Denna hantering av variabler kallas i manualen för "[User-Defined Variables](https://mariadb.com/docs/server/reference/sql-structure/sql-language-structure/user-defined-variables)".
-
-Du kan använda detta sättet för att hantera variabler även inuti en lagrad procedur, detta sättet och DECLARE är två sätt du kan välja att använda för variabler, antingen i ditt SQL-script eller i ett compund statement.
-
-
-
-## IN och UT parametrar
-
-En lagrad procedur kan ta IN, OUT och INOUT parametrar. Det vi använt hittills är IN parametrar. Låt oss se ett exempel på hur det ser ut.
-
-Här är ett exempel på en lagrad procedur `get_money` som tar `IN account` för att kontrollera hur mycket pengar som finns på kontot och det resulterande värdet sätts i parametern `OUT total`. Den som anropar proceduren kan alltså använda värdet på `total` utanför proceduren.
-
-```sql
-CREATE PROCEDURE get_money(
-    IN p_account CHAR(4),
-    OUT p_total NUMERIC(4, 2)
-)
+CREATE TRIGGER trigger_test1
+AFTER UPDATE
+ON account FOR EACH ROW
 BEGIN
-    SELECT balance INTO p_total FROM account WHERE id = p_account;
+    -- Some compound statements
+
+    INSERT INTO `account_log` (`what`, `account`, `balance`, `amount`)
+        VALUES ('trigger', NEW.id, NEW.balance, NEW.balance - OLD.balance);
 END
 ;;
+
+DELIMITER ;
 ```
 
-Proceduren tar två argument, det ena är IN och det andra är OUT.
+Som du ser så behöver vi använda DELIMITER när vi konstruerar dessa compound statements.
 
-I SELECT-satsen hämtas ett värde från databasen och lagras i variabeln `p_total`.
-
-Så här kan det se ut när vi anropar proceduren och bifogar en variabel att spara totalen i.
+Du kan provköra ovan trigger och du kommer då se att det blir dubbla lagringar i logg-tabellen.
 
 ```sql
-CALL get_money('1111', @sum);
-SELECT @sum;
+MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
+Query OK, 3 rows affected (0,002 sec)
+
+MariaDB [mydb]> SELECT * FROM account_log;
++----+---------------------+---------+---------+---------+--------+
+| id | when                | what    | account | balance | amount |
++----+---------------------+---------+---------+---------+--------+
+|  1 | 2026-02-20 14:06:07 | trigger | 1111    |    4.00 |  -1.50 |
+|  2 | 2026-02-20 14:06:07 | trigger | 1111    |    4.00 |  -1.50 |
+|  3 | 2026-02-20 14:06:07 | trigger | 2222    |   13.00 |   1.50 |
+|  4 | 2026-02-20 14:06:07 | trigger | 2222    |   13.00 |   1.50 |
++----+---------------------+---------+---------+---------+--------+
+4 rows in set (0,000 sec)
 ```
 
-När anropet sker med CALL så bifogas en variabel som efter anropet kan läsas av och användas vidare.
+Innan du går vidare så kan du droppa denna trigger så att den inte ligger i bakgrunden och skapar udda resultat i logg-tabellen.
 
-Det kan se ut så här när vi kör anropen ovan.
+
+
+## Felhantering med trigger
+
+En trigger kan inte skriva ut saker med SELECT, eller returnera ett resultset. Ett relaterat felmeddelande är då följande.
+
+```text
+ERROR 1415 (0A000): Not allowed to return a result set from a trigger
+```
+
+Behöver man debugga en trigger på det sättet så kan man skapa en extra tabell som man skriver till med INSERT och jobba med compound statements.
+
+
+
+## En trigger som misslyckas
+
+Du kan ha en BEFORE trigger och låta den misslyckas genom att signalera ett felmeddelande. Den motsvarande operationen INSERT, UPDATE, DELETE kommer då inte att utföras.
+
+Här är ett exempel, vi skapar en trigger som utförs BEFORE UPDATE, men vi låter den signalera ett fel via [SIGNAL](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/signal).
 
 ```sql
-mysql> CALL get_money('1111', @sum);
-Query OK, 1 row affected (0.00 sec)
+--
+-- Trigger with compound statement and user defined errors
+--
+DROP TRIGGER IF EXISTS trigger_test2;
 
-mysql> SELECT @sum;
-+------+
-| @sum |
-+------+
-| 7.00 |
-+------+
-1 row in set (0.00 sec)
+DELIMITER ;;
+
+CREATE TRIGGER trigger_test2
+BEFORE UPDATE
+ON account FOR EACH ROW
+BEGIN
+    SIGNAL SQLSTATE '45000' SET message_text = 'My Error Message';
+END
+;;
+
+DELIMITER ;
 ```
 
-Här ser vi alltså hur en lagrad procedur kan samverka med en variabel.
+Om vi nu prövar att uppdatera tabellen `account` så kommer vi att få ett felmeddelande.
 
-En lagrad procedur kan även ta ett argument som är INOUT, det betyder både IN och OUT. Proceduren tar värdet som IN parameter och kan sedan uppdatera innehållet i variabeln. Den som anropar proceduren kan sedan använda det uppdaterade värdet.
+Det kan se ut så här.
+
+```text
+MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
+ERROR 1644 (45000): My Error Message
+```
+
+En trigger kan alltså utföra kontroller innan (BEFORE) själva satsen utförs.
 
 
 
-## SHOW WARNINGS
+## SHOW TRIGGERS
 
-Ibland kan man se att man får en varning av ett anrop till en lagrad procedur. I följande exempel anger jag ett värde på en variabeln som är utanför variabelens range.
+När man vill se vilka triggers som finns i databasen, och hur de är definierade, så kan man visa dem med [SHOW TRIGGERS](https://mariadb.com/docs/server/reference/sql-statements/administrative-sql-statements/show/show-triggers).
 
 ```sql
-mysql> CALL edit_account('1337', 'Mega', 4200000);
-Query OK, 1 row affected, 1 warning (0.00 sec)
+SHOW TRIGGERS \G;
+SHOW TRIGGERS LIKE 'account' \G;
+SHOW TRIGGERS FROM mydb \G;
 ```
 
-För att se vad varningen säger så kan jag läsa av den.
+Det kan vara tydligare att visa de triggers som är kopplade till en viss tabell via `LIKE 'account'` eller visa alla triggers som är kopplade till en viss databas via `FROM mydb`.
+
+Svaret blir en lista med triggers och definitionerna för dem.
+
+Eftersom triggers inte "syns" utan de bara verkställer i bakgrunden, så kan det ibland vara lätt att glömma bort att de finns där, i bakgrunden, och utför ett jobb.
+
+Glöm inte bort `SHOW TRIGGERS` för att se vilken eventuell magi som kan dölja sig bakom den vanliga SQL-koden. Om något är skumt, dubbelkolla att du inte glömt kvar en trigger.
+
+Innan du går vidare så bör du ta bort dina två triggers, som du eventuellt skapade för att testa.
 
 ```sql
-mysql> SHOW WARNINGS;
-+---------+------+---------------------------------------------------+
-| Level   | Code | Message                                           |
-+---------+------+---------------------------------------------------+
-| Warning | 1264 | Out of range value for column 'p_balance' at row 1 |
-+---------+------+---------------------------------------------------+
-1 row in set (0.00 sec)
+DROP TRIGGER IF EXISTS trigger_test1;
+DROP TRIGGER IF EXISTS trigger_test2;
 ```
 
-Det kan vara bra att ha koll på detta, det är en felkälla och ett bra verktyg för felsökning och utveckling.
+Du bör nu enbart ha kvar en trigger.
 
-
-
-## SHOW PROCEDURE
-
-När man vill se vilka procedurer som finns i databasen så kan man visa dem. Här visar jag de procedurer som slutar på delsträngen `%money`.
+Det finns möjligheten att se vilken kod som användes för att skapa en trigger.
 
 ```sql
-SHOW PROCEDURE STATUS LIKE '%money';
+SHOW CREATE TRIGGER <trigger-name>;
+SHOW CREATE TRIGGER log_balance_update \G;
 ```
 
-Svaret blir en lista med alla de procedurer som finns och till vilken databas de är kopplade samt vilken användare som skapade dem.
+Det visar SQL-koden som skapade triggern, så kan du inspektera om det är "rätt" kod. Ibland är det bra teknik att använda vid felsökning.
 
-Vill du sedan titta på koden som ligger bakom den lagrade proceduren så frågar du efter den.
 
-```sql
-SHOW CREATE PROCEDURE move_money \G;
-```
 
-Fram kommer källkoden för proceduren och man kan kontrollera/felsöka att det är "rätt version" som man använder.
+## Bra att veta
 
-Tänk på att du kan använda `ALTER PROCEDURE`, som ett alternativ till `DROP/CREATE`. Det kan vara smidigt, till exempel när man utvecklar och hela tiden skapar om proceduren och testar små ändringar.
+När du gör DROP på en tabell, så försvinner de trigger som är kopplade till tabellen. Det kan vara bra att veta om det.
+
+I en INSERT trigger är värdet på NEW, för en AUTO_INCREMENT satt till 0 och inte det värdet som nyckeln får när raden är inlagd i tabellen.
+
+Om en BEFORE trigger misslyckas så utförs inte den tänkta operationen.
+
+En AFTER trigger utförs enbart efter att samtliga BEFORE triggers har utförts och efter att raderna processats med INSERT, UPDATE eller DELETE.
+
+Ett av de vanligaste felen, när man jobbar med triggers, är att glömma att de finns. Om du får ett udda felmeddelande så börja med att lista vilka triggers som finns och gör drop på dem om du är osäker.
 
 
 
 ## Avslutningsvis
 
-Detta var grunderna i hur du kan jobba med lagrade procedurer som ett sätt att programmera i en databas. Kanske kan detta även vara ett sätt att bygga ett API mot en databas.
+Detta var grunderna i hur triggers fungerar och hur du skapar dem. Kanske kan triggers vara ett sätt att hålla konsistens i din databas och ett sätt att få saker att hända utan att exekvera SQL-kod från klientprogrammen.
 
+Liksom lagrade procedurer erbjuder även triggers ett sätt att tänka i form av API mot en databas. Triggern kan ju utföra flera uppdateringar som användaren inte behöver fundera på.
+
+Det kan vara en nackdel när en databas blir alltför magisk och automatisk. Saker händer utan att man har koll på vad som sker. Felsökningen blir mer utmanande när man behöver ha koll på alla triggers som ligger i bakgrunden.

@@ -107,6 +107,6 @@ Bygg stöd för samtliga menyval ovan.
 
 ## Avslutningsvis
 
-Glöm inte kontroller att lintern passerar.
+Glöm inte kontrollera att lintern passerar.
 
 Fundera på om din kod är DRY eller om det finns delar som du kan förbättra.
