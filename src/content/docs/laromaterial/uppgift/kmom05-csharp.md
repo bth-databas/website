@@ -7,17 +7,20 @@ sidebar:
     order: 0050
 ---
 
-Denna uppgift görs som en del av kmom05.
+Denna uppgift görs som en del av kmom05 och den bygger vidare på den uppgiften du gjort i kmom04.
 
 <!--
 TODO
-* Ett konto behöver vara transaktionskonto, så det blir tydligt.
-* Borde använda marketplace_id och inventory_id istället för product_id
+* 
 -->
+
+
 
 ## Förutsättning
 
 Du behöver ha jobbat igenom övningen "Övning: Lagrade procedurer i databas" och du behöver veta hur man använder lagrade procedurer i ett CSharp program.
+
+Du behöver också ha färdigställt uppgiften från kmom04.
 
 
 
@@ -27,11 +30,7 @@ Utför följande krav.
 
 1. Skapa ett CSharp projekt i katalogen `kmom/05/Bank` genom att kopiera ditt projekt från `kmom/04/Bank`.
 
-1. Dela upp koden i klasser.
-
-1. Bygg en liknande meny-hantering som du jobbade med i förra uppgiften.
-
-1. Du bör organisera din kod så att den är DRY (Do not repeat yourself).
+1. Bygg vidare på det projektet. Dela upp koden i klasser. Organisera din kod så att den är DRY.
 
 1. Koden skall passera `roslynator analyze` enligt Roslyn.
 
@@ -47,29 +46,97 @@ Utför följande krav.
 
 1. Uppdatera din CSharp-kod så att den använder sig av lagrade procedurer för att implementera (minst) följande kommandon.
 
+1. Glöm inte transaktionsavgiften till det hemliga kontot och se till att använda transaktioner.
+
 ```text
 $ dotnet run
-move            - Move 1.5 bitcoin from Adam to Eva (do not forget the secret account)
-move <amount> <from> <to>
-                - Move a flexible amount of bitcoin from one account to another account
-                - (do not forget the secret account)
-swish <amount> <to>
-                - Add <amount> to the account <to>, do not forget to take 0.01 bitcoin 
-                - as a transaction fee and put inot the secret account. 
+move                      - Move 1.5 bitcoin from Adam to Eva
+move <amount> <from> <to> - Move a flexible amount of bitcoin from one account to another account
+swish <amount> <to>       - Add <amount> to the account <to>
 ```
+
+<details>
+<summary>UPPDATERING. Vilka filer vi sparar SQL i.</summary>
+
+I en tidigare version av uppgiften förekom att vi skulle spara SQL-kod i flera olika filer. Det är ok om du gjort det.
+
+Du kan alltid göra `source` för att länka samma flera filer, så att de kan köras som en enhet.
+
+Däremot kan det bli enklare att hantera om all SQL-kod sparas i en fil, därför är kravet uppdaterat till att vi sparar all kod i filen `setup.sql`.
+
+</details>
+
+
+
+## Krav - En menydriven applikation
+
+Ditt terminalprogram skall stödja samma menyval som fanns som krav i terminalprogrammet i kmom04.
+
+Följande är de nya menyvalen som skall stödjas.
+
+<!--
+TODO
+
+*
+-->
+
+```text
+$ dotnet run
+marketplace <search>   - Show all products on the marketplace or filter by <search>
+product <search>       - Show all products in the product catalogueor or filter by <search>
+inventory <search>     - Show all inventory or filter by <search>
+
+sell <customerid> <productid> <price> - Move a product from the customers inventory to the 
+                                      - marketplace, offer for a price.
+buy <customerid> <marketplace_id>     - Buy a product from the marketplace to the customer
+                                      - inventory, pay for it.
+```
+
+Bygg stöd för samtliga menyval ovan. 
+
+<details>
+<summary>UPPDATERING. Menyvalet `market` är borttaget.</summary>
+
+Menyvalet `market <productid> <price>` är borttaget för att förenkla uppgiften. Det fanns med i första utgåvan av uppgiften.
+
+```text
+market <productid> <price>            - Add a new product (from the product table) to the 
+                                      - marketplace for the specified price.
+```
+
+</details>
+
+<details>
+<summary>UPPDATERING. Menyvalet `buy` är uppdaterat.</summary>
+
+Menyvalet `buy <customerid> <marketplace_id>` hade tidigare `product_id` istället för `marketplace_id`. Men det är troligen enklare att hantera ett köp som direkt pekar ut en rad i tabellen marketplace, istället för att peka ut en viss produkt.
+
+Ändringen är gjord för att förenkla uppgiften.
+
+Så här såg det ut i första utgåvan av uppgiften. Har man gjort på det viset så är det också godkänt.
+
+```text
+buy <customerid> <product_id>         - Buy a product from the marketplace to the customer
+                                      - inventory, pay for it.
+```
+
+</details>
+
+Fortsätt att läsa för att förstå hur din databas skall byggas upp för att stödja ditt terminalprograms menyval.
+
 
 
 ## Krav - Nya tabeller
 
 Utför följande krav.
 
-1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
+1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för product_id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
 
 1. Lägg till INSERT för att lägga till minst 5 olika produkter i tabellen.
 
-1. Din databas skall ha en tabell som heter `inventory` som är en fysisk representation av en produkt som ägs av en customer. Kolumner i tabellen skall vara id, quantity, created_at, updated_at (TIMESTAMPS) samt FK customer_id och product_id. När en produkt finns i ett inventory så ägs den av en customer.
+1. Din databas skall ha en tabell som heter `inventory` som är en fysisk representation av en produkt som ägs av en customer. Kolumner i tabellen skall vara inventory_id, created_at, updated_at (TIMESTAMPS) samt FK customer_id och product_id. När en produkt finns i ett inventory så ägs den av en customer.
 
-1. Lägg till INSERT för att lägga till minst 3 olika produkter till varje customer. Det skall finnas minst 2 customers.
+1. Lägg till INSERT för att lägga till minst 2 olika produkter till varje customer. Det skall finnas minst 2 customers.
 
 1. Det skall finnas en tabell som heter `marketplace` som erbjuder de produkter som är till salu. Tabellen skall innehålla kolumner för price, created_at, updated_at (TIMESTAMPS) samt relationen till vilken produkt det är och vilken kund som äger den.
 
@@ -81,10 +148,6 @@ Utför följande krav.
 
 1. Uppdatera din tabell `account` så att den innehåller en type, som anger vilken typ av konto det är. Varje kund har alltid ett (och endast ett) transaktionskonto. Om en kund har fler konton så är dessa sparkonton (savings) eller någon annan typ. När en transaktion sker på marketplace så sker den alltid via kundernas transaktionskonton.
 
-1. ~När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.~
-
-1. ~När en customer säljer en produkt till marketplace så får customern pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.~
-
 1. Det får inte bli noll på ett account. 
 
 1. Skissa på ett ER-diagram i puml som visar hur dina tabeller är kopplade. Spara i filen `bank.puml`. 
@@ -93,46 +156,39 @@ Utför följande krav.
 
 1. Använd PRIMARY KEY och FOREIGN KEY i dina tabeller.
 
-1. All SQL-kod skall hanteras av lagrade procedurer.
+1. All SQL-kod som anropas från CSharp skall hanteras av lagrade procedurer.
 
 1. Använd transaktioner där det behövs.
 
+<!--
 1. OPTIONAL Lägg till en ASCII art på  varje produkt för at göra det lite roligare och ge möjligheten att visa upp vilken produkt man har i sitt inventory. Tänk att det är en ny form av NTF.
+-->
 
+<details>
+<summary>UPPDATERING. Begreppet `quantity` är borttaget.</summary>
 
-## Krav - En menydriven applikation
+I tidigare utgåvor av uppgiften hanterades kolumnen `quantity` i tabellerna för inventory och marketplace. Men det gör uppgiften lite mer komplex. 
 
-Skapa en menydriven applikation C# som ser ut så här för användaren.
+I denna uppdateringen så är quantity borttaget för att förenkla uppgiften.
 
-När programmet startas så skrivs meny ut. Du kan formattera utskriften av menyn efter dina egna tankar.
+Du kan välja att lägga till quantity om du vill, men uppgiften är nog redan omfattande så håll det enkelt.
 
-Ditt terminalprogram skall stödja samma menyval som anns som krav i terminalprogrammet i kmom04.
+</details>
 
-Följande är de nya menyvalen som skall stödjas.
+<details>
+<summary>UPPDATERING. Marketplace köper inte produkten.</summary>
 
-```text
-$ dotnet run
-marketplace <search>
-                - Show all products on the marketplace or filter by <search>
-product <search>
-                - Show all products in the product catalogue, or show only the 
-                - one matching the search string. Make it possible to search all columns.
-inventory <customerid>
-                - Show all inventory, or show only the one for a specific customer 
-                - id.
-sell <customerid> <productid> <price>
-                - Place a product from the customers inventory to the marketplace for
-                - the specified price, offer to sell it.
-buy <customerid> <productid>
-                - Buy a product from the marketplace to the customers inventory, pay for it.
-market <productid> <price>
-                - Add a new product (from the product table) to the 
-                - marketplace for the specified price.
-```
+I tidigare utgåvor av uppgiften så skedde transaktioner mellan account när en kund "sålde" en produkt till marketplace.
 
-Bygg stöd för samtliga menyval ovan.
+1. ~När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.~
 
-Glöm inte att även samtliga menyvalen från kmom04 skall fungera, till exempel möjligheten att se account, customer och secret account.
+1. ~När en customer säljer en produkt till marketplace så får customern pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.~
+
+Så kan man naturligtvis så på transaktionen. Om du löst det på det viset så är det ok.
+
+I uppdateringen så sker inget utbyte av pengar förrän varan köps av en kund.
+
+</details>
 
 
 
