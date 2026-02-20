@@ -472,7 +472,7 @@ public async Task MoveMoneyWithBalanceOutput()
     // Get the value of the OUT param
     decimal currentBalance = (decimal)command.Parameters["@p_balance"].Value!;
 
-    Console.WriteLine($"Överföring klar! Nytt saldo: {newBalance:N2}");
+    Console.WriteLine($"Överföring klar! Nytt saldo: {currentBalance:N2}");
 }
 ```
 
