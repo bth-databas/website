@@ -44,9 +44,9 @@ Utför följande krav.
 
 1. Skapa lagrade procedurer för att flytta pengar mellan konton samt för att swisha till ett konto.
 
-1. Uppdatera din CSharp-kod så att den använder sig av lagrade procedurer för att implementera (minst) följande kommandon.
+1. Glöm inte transaktionsavgiften till det hemliga kontot och använd transaktioner där det behövs.
 
-1. Glöm inte transaktionsavgiften till det hemliga kontot och se till att använda transaktioner.
+1. Uppdatera din CSharp-kod så att den använder sig av lagrade procedurer för att implementera (minst) följande kommandon.
 
 ```text
 $ dotnet run
