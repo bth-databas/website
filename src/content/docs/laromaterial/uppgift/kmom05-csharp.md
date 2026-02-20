@@ -86,10 +86,10 @@ marketplace <search>   - Show all products on the marketplace or filter by <sear
 product <search>       - Show all products in the product catalogueor or filter by <search>
 inventory <search>     - Show all inventory or filter by <search>
 
-sell <customerid> <productid> <price> - Move a product from the customers inventory to the 
-                                      - marketplace, offer for a price.
-buy <customerid> <marketplace_id>     - Buy a product from the marketplace to the customer
-                                      - inventory, pay for it.
+sell <customerid> <inventoryid> <price> - Move a product from the customers inventory to the 
+                                        - marketplace, offer for a price.
+buy <customerid> <marketplaceid>        - Buy a product from the marketplace to the customer
+                                        - inventory, pay for it.
 ```
 
 Bygg stöd för samtliga menyval ovan. 
@@ -107,16 +107,32 @@ market <productid> <price>            - Add a new product (from the product tabl
 </details>
 
 <details>
-<summary>UPPDATERING. Menyvalet `buy` är uppdaterat.</summary>
+<summary>UPPDATERING. Menyvalet `sell` är uppdaterat.</summary>
 
-Menyvalet `buy <customerid> <marketplace_id>` hade tidigare `product_id` istället för `marketplace_id`. Men det är troligen enklare att hantera ett köp som direkt pekar ut en rad i tabellen marketplace, istället för att peka ut en viss produkt.
+Menyvalet `sell <customerid> <inventoryid> <price>` hade tidigare `productid` istället för `inventoryid`. Men det är troligen enklare att hantera en flytt som direkt pekar ut en rad i tabellen inventory, istället för att peka ut en viss produkt.
 
 Ändringen är gjord för att förenkla uppgiften.
 
 Så här såg det ut i första utgåvan av uppgiften. Har man gjort på det viset så är det också godkänt.
 
 ```text
-buy <customerid> <product_id>         - Buy a product from the marketplace to the customer
+sell <customerid> <productid> <price> - Move a product from the customers inventory to the 
+                                      - marketplace, offer for a price.
+```
+
+</details>
+
+<details>
+<summary>UPPDATERING. Menyvalet `buy` är uppdaterat.</summary>
+
+Menyvalet `buy <customerid> <marketplaceid>` hade tidigare `productid` istället för `marketplaceid`. Men det är troligen enklare att hantera ett köp som direkt pekar ut en rad i tabellen marketplace, istället för att peka ut en viss produkt.
+
+Ändringen är gjord för att förenkla uppgiften.
+
+Så här såg det ut i första utgåvan av uppgiften. Har man gjort på det viset så är det också godkänt.
+
+```text
+buy <customerid> <productid>          - Buy a product from the marketplace to the customer
                                       - inventory, pay for it.
 ```
 
