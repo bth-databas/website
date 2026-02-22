@@ -1,5 +1,5 @@
 ---
-title: "⚠️ Automatiserade tester" 
+title: "Automatiserade tester" 
 description: Så här kan du testa ditt eget repo inför en inlämning.
 sidebar:
     order: 0060
@@ -17,14 +17,14 @@ Detta dokument ivsar hur du kan installera och använda verktyget.
 
 Du går till ditt repo och sedan installerar du verktyget som en npm-modul.
 
-```
-npm i @dbwebb/webtec --save-dev
+```bash
+npm install @dbwebb/databas --save-dev
 ```
 
 Uppdatera din lokala installtion till den senaste versionen av verktyget.
 
-```
-npm update @dbwebb/webtec@latest
+```bash
+npm update @dbwebb/databas@latest
 ```
 
 
@@ -34,18 +34,20 @@ Du kan köra tester mot ett specifikt kursmoment. Om du väljer ett högre kursm
 
 För att tex testa ditt kmom03 så skriver du följande.
 
-```
-npx @dbwebb/webtec check kmom03
+```bash
+npx @dbwebb/databas check kmom03
 ```
 
+<!--
 Om du vill testa dina labbar så anger du vilka labbar som du vill testa, så här kan du testa de labbar som omfattas av kmom03.
 
+```bash
+npx @dbwebb/databas check lab lab_01 lab_02 lab_03
 ```
-npx @dbwebb/webtec check lab lab_01 lab_02 lab_03
-```
+-->
 
 
 
 ## Dokumentation
 
-Du kan läsa om verktyget via dess paket-sida [`@dbwebb/webtec`](https://www.npmjs.com/package/@dbwebb/webtec), därifrån kan du också nå dess källkod.
+Du kan läsa om verktyget via dess paket-sida [`@dbwebb/databas`](https://www.npmjs.com/package/@dbwebb/databas), därifrån kan du också nå dess källkod.
