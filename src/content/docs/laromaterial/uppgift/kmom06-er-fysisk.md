@@ -2,7 +2,7 @@
 title: "Uppgift: ER-modellering - fysisk (kmom06)" 
 description: "Uppgift att göra en fysisk modellering av en databas."
 revision:
-    "2026-02-27": "(B) Lägg till krav om att visa schema.pdf."
+    "2026-02-27": "(B) Lägg till krav om att visa schema.pdf, förtydliga några krav."
     "2026-02-20": "(A) Första utgåvan."
 sidebar:
     order: 0065
@@ -42,13 +42,15 @@ Missa inte att dokumentera varje steg i ditt ER-dokument.
 
 1. Skapa katalogen `kmom/06/eshop/` och spara allt ditt arbete där.
 
-1. Generera en PDF-fil `er.pdf` av dokumentet och spara i `kmom/06/eshop/`.
+1. Generera en PDF-fil `er.pdf` av ditt kompletta dokument och spara.
 
 1. Skapa filen `setup.sql` som skapar databasen `eshop` med character set och collate.
 
-1. Skapa de tabeller som du modellerat fram. Om du behöver ändra på något så gör du det i SQL-koden som skapar databasens schema, du behöver inte gå tillbaka och modifiera din ER-modell.
+1. I filen `setup.sql` lägger du till SQL dör att skapa de tabeller (och vyer) som du modellerat fram. Om du behöver ändra på något så gör du det i SQL-koden som skapar databasens schema, du behöver inte gå tillbaka och modifiera din ER-modell.
 
 1. Använd PK och FK.
+
+1. Du behöver inte lägga till INSERT-satser i `setup.sql` för att fylla databasen, det gör du i nästa kmom när du börjar använda databasen "på riktigt".
 
 1. Verifiera att du kan köra `setup.sql` minst två gånger efter varandra och databasen skapas korrekt.
 
