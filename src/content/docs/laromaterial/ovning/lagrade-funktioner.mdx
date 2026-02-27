@@ -1,9 +1,9 @@
 ---
-title: "⚠️ Övning: Lagrade funktioner i databas" 
-description: "Övning för att använda egendefinierade funktioner i databas."
+title: "Övning: Lagrade funktioner i databas" 
+description: "Övning för att använda lagrade funktioner i databas."
 author: mos
 revision:
-    "2026-02-16": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/egen-definierade-funktioner-i-databas."
+    "2026-02-27": "(A, mos) Första versionen utifrån en befintlig artikel https://dbwebb.se/kunskap/egen-definierade-funktioner-i-databas."
 sidebar:
     order: 0700
 ---
@@ -17,9 +17,9 @@ TODO
 * 
 */}
 
-Låt oss kika på vad en egendefinierad funktion är, i en databas. Konceptet kallas även UDF som *User Defined Function* och det kan erbjuda en möjlighet att skriva snyggare och mer kraftfull SQL-kod.
+Låt oss kika på vad en lagrad funktion är. Det handlar om `CREATE FUNCTION` och "compound statements" och hur det används tillsammans med SQL-frågor. 
 
-Dagens ämne är alltså egendefinerade funktioner i databasen och det bygger vidare på koncepten om lagrade procedurer och "compund statements".
+En kort förklaring är att det är en möjlighet att skriva små program i databasen som kan användas i SQL-satser, t.ex. i SELECT-satser. Det är ett sätt att göra SQL-koden mer kraftfull och mer läsbar, eller att göra komplexa frågor på ett strukturerat sätt genom att dela upp kod. 
 
 {/*
 import cs1 from '@assets/databas/csharp/cs1.png';
@@ -34,14 +34,14 @@ import cs1 from '@assets/databas/csharp/cs1.png';
 
 ## Förutsättningar
 
-Artikeln bygger på kunskap som du fått i artikeln "[Lagrade procedurer i databas](/website/laromaterial/ovning/lagrade-procedurer/)" och de artiklar som är närliggande.
+Artikeln bygger vidare på den kunskap du redan har om lagrade procedurer, triggers och compound statements.
 
-Artikeln visar grunderna i [Stored Function](https://mariadb.com/docs/server/server-usage/stored-routines/stored-functions) som kan skrivas med [compund statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
+Här kan du repetera genom att läsa i manualen.
 
-
-:::danger
-Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
-:::
+* [Stored Procedures](https://mariadb.com/kb/en/stored-procedures/)
+* [Triggers](https://mariadb.com/kb/en/triggers/)
+* [Stored Functions](https://mariadb.com/kb/en/stored-functions/)
+* [Compound Statements](https://mariadb.com/kb/en/programmatic-compound-statements/)
 
 
 
@@ -51,20 +51,20 @@ I ditt kursrepo, skapa följande katalog där du kan spara ditt arbete med denna
 
 ```bash title="Skapa katalog för övningen"
 # Gå till ditt kursrepo
-cd kmom/05
+cd kmom/07
 
 # Skapa en katalog
-mkdir procedure
-cd procedure
+mkdir function
+cd function
 
 # Öppna katalogen i VS Code
 code .
 ```
 
-Skapa filen `procedure.sql` och lägg in följande kommentar, överst i filen.
+Skapa filen `function.sql` och lägg in följande kommentar, överst i filen.
 
-```sql title="procedure.sql"
--- Example code on how to work with stored procedures.
+```sql title="function.sql"
+-- Example code on how to work with stored functions.
 -- Course: databas
 -- Author: Your Name
 -- Date: ÅÅÅÅ-MM-DD
@@ -74,18 +74,16 @@ Uppdatera med rätt datum och namn.
 
 
 
-## Databasen mydb som exempel
+## Exempel
 
-Vi tar samma exempel vi använde i artikeln "Transaktioner i databas". Adam och Eva skall flytta pengar mellan varandra. SQL-koden för exemplet ser ut så här.
-
-Om du inte har databasen så får du gå till den artikeln och använda SQL-koden som finns i den artikeln för att skapa databasen och tabellen.
+Låt mig visa dig ett exempel där läraren behöver gradera betyg på en tentamen som studenterna har gjort. Läraren har sparat all information i en tabell och nu är det enbart betygsättningen kvar.
 
 <details>
-<summary>Facit till att skapa databasen för denna övning</summary>
+<summary>Skapa databasen mydb (om du inte redan har den).</summary>
 
-Du kan spara innehållet nedan i en fil `create.sql`.
+Om du inte redan har din databas "mydb" så finns här kod för att skapa den.
 
-```sql title="SQL för att skapa databasen som behövs till övningen."
+```sql title="SQL-kod för att skapa databasen mydb."
 --
 -- Create the database
 --
@@ -96,577 +94,515 @@ CREATE DATABASE `mydb`
 ;
 
 USE `mydb`;
-
---
--- Table account
---
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE `account`
-(
-    `id` CHAR(4) PRIMARY KEY,
-    `name` VARCHAR(8),
-    `balance` DECIMAL(4, 2)
-);
-
---
--- Insert into table account
---
-DELETE FROM `account`;
-INSERT INTO `account`
-VALUES
-    ('1111', 'Adam', 10.0),
-    ('2222', 'Eva', 7.0)
-;
-
-SELECT * FROM `account`;
 ```
 
 </details>
 
+Skapa följande tabell så att du kan provköra koden i din egen databas.
 
+```sql
+DROP TABLE IF EXISTS `exam`;
+CREATE TABLE `exam`
+(
+    `acronym` CHAR(4) PRIMARY KEY,
+    `score` INTEGER
+);
 
-## Att skriva små program i databasen
+INSERT INTO `exam`
+VALUES
+    ('adam', 77),
+    ('ubbe', 52),
+    ('june', 49),
+    ('john', 63),
+    ('meta', 97),
+    ('siva', 88);
 
-Databasen MariaDB stödjer något de kallar [Compound Statements](https://mariadb.com/kb/en/programmatic-compound-statements/) som är det "programmeringsspråk" som används för att skriva lagrade procedurer och liknande konstruktioner (egen-definierade funktioner och trigger). Compound statements kan liknas med traditionell programmeringskod med variabler och loopar som kan interagera med ren SQL-kod.
-
-Detta ger oss en möjlighet att skriva små program i databasen. Dessa program lagras i databasen, de blir till en del av själva databasen.
-
-Låt oss kika på hur en lagrad procedur kan se ut, skriven med SQL och compound statements.
-
-
-
-## Exempel på transaktion
-
-I artikeln om transaktioner så använde vi följande kod för att flytta pengar mellan konton.
-
-```sql title="Flytt av pengar med SQL inom en transaktion."
---
--- Move the money, within a transaction
---
-START TRANSACTION;
-
-SET @amount = 1.5;
-SET @from = '1111';
-SET @to   = '2222';
-
-UPDATE `account` SET `balance` = `balance` - @amount WHERE `id` = @from;
-UPDATE `account` SET `balance` = `balance` + @amount WHERE `id` = @to;
-
-COMMIT;
+SELECT * FROM `exam`;
 ```
 
-Det vi nu vill göra är att uppdatera koden så att den tar hänsyn till att det inte kan bli 0 på ett konto. Om det kan bli det så skall vi göra en ROLLBACK av transaktionen och flytten av pengar skall inte genomföras.
+Så här ser tabellen ut när vi är klara.
 
-Vi kan dock inte använda en IF-sats i vanlig SQL och därför behöver vi en konstruktion av "compund statement" och det är något vi kan skriva inom ramen för en lagrad procedur.
+```sql
+mysql> SELECT * FROM exam;
++---------+-------+
+| acronym | score |
++---------+-------+
+| adam    |    77 |
+| john    |    63 |
+| june    |    49 |
+| meta    |    97 |
+| siva    |    88 |
+| ubbe    |    52 |
++---------+-------+
+6 rows in set (0.00 sec)
+```
 
-Låt oss se hur det kan se ut.
+Då är vi redo för betygsättningen. Men först behöver vi en betygsskala, följande blir bra.
+
+| A-F | Poäng | Definition |
+|:---:|:-----:|------------|
+| A   | 90+   | UTMÄRKT – enastående resultat. |
+| B   | 80+   | MYCKET BRA – klart över medelstandard. |
+| C   | 70+   | BÄTTRE ÄN BRA – allmänt bra arbete. |
+| D   | 60+   | BRA – en fullgod prestation. |
+| E   | 55+   | GODKÄNT – resultatet uppfyller minimikriterierna. |
+| FX  | 54-   | KOMPLETTERA – mer arbete krävs innan betyg kan sättas. |
+| F   | 50-   | OTILLRÄCKLIGT – (avsevärt) mer arbete krävs. |
+
+Då var det bara att koppla ihop betyget via poängen för respektive student. Innan du går vidare, kan du fundera på hur du skulle göra detta i SQL i en SELECT-sats?
 
 
 
-## En lagrad procedur för att flytta pengar
+## Lagrade funktioner
 
-Vi kan egentligen bara flytta pengar om det finns några pengar på kontot. Vi behöver kontrollera om Adam har så mycket pengar på kontot som han nu är benägen att flytta till Eva.
+Idag skall vi lösa detta problemet med något som heter lagrade funktioner. Det vi vill ha är en funktion som tar en poäng som inparameter och returnerar ett betyg.
 
-Vi gör en lagrad procedur som flyttar pengarna, förutsatt att de finns. Principen blir följande:
+Tanken är att skriva en funktion som kan användas i en SELECT-sats och returnera betyget utifrån antalet poäng. Funktionen skall alltså översätta ett poäng till ett betyg, inuti en SELECT-sats.
 
-1. Starta transaktionen.
-1. Kolla om pengar finns på kontot
-    1. Läs hur mycket pengar som finns på kontot
-    1. Gör en IF-sats för att kolla att det är tillräckligt med pengar
-        1. Gör ROLLBACK om det inte finns tillräckligt med pengar
-1. Flytta pengarna
-1. Allt måste ske inom en och samma transaktion
-    1. Gör COMMIT.
+Så här ska det kunna se ut.
+
+```sql title="Exempel på hur en lagrad funktion kan användas i en SELECT-sats."
+SELECT
+    acronym,
+    score,
+    grade(score) AS grade
+FROM exam;
+```
+
+Det är alltså delen med `grade(score)` som är anropet till en lagrad funktion.
+
+Kunde man inte gjort detta med en tabell som innehåller betygstabellen och joinat med ett smart villkor eller använd en sub-query? Jo, det kan man säkert. Men nu använder vi funktioner. I databaser finns ofta olika varianter på att lösa ett specifikt problem.
 
 
 
-### Delimiter 
+## CREATE FUNCTION
 
-För att skapa en lagrad procedur så omsluter vi dess kod på följande sätt, med en [`CREATE PROCEDURE`](https://mariadb.com/docs/server/server-usage/stored-routines/stored-procedures/create-procedure).
+Vi börjar med att skapa en enkel funktion för att lära oss konceptet och hur det används.
+
+Jag skapar en funktion som bara returnerar inkommande parameter. Det är bara för att ha ett skal, en mall, att komma igång med.
+
+Här är mallen till en sådan funktion.
 
 ```sql
 --
--- Procedure move_money()
+-- Function for grading an exam.
 --
-DROP PROCEDURE IF EXISTS move_money;
-
+DROP FUNCTION IF EXISTS `grade`;
 DELIMITER ;;
 
-CREATE PROCEDURE move_money(
-    -- Here comes the definition of the parameters
+CREATE FUNCTION `grade`(
+    p_score INTEGER
 )
-    -- Here comes SQL and compund statements
-;;
-
-DELIMITER ;
-```
-
-Koden ändrar *delimiter* för att koden inuti den lagrade proceduren inte skall krocka med det semikolon som avslutar själva proceduren. Det finns även [beskrivet i manualen "Stored Procedure Overview"](https://mariadb.com/docs/server/server-usage/stored-routines/stored-procedures/stored-procedure-overview) om varför man gör så här.
-
-Det ar viktig att se hur du först gör `DELIMITER ;;` innan du påbörjar skapandet av proceduren, sedan avslutas proceduren med `;;` och därefter går du direkt tillbaka till `DELIMITER ;` (som vanligt).
-
-Se dessa DELIMITER som en naturlig del av skapandet av din procedur.
-
-
-
-### Parametrar och body
-
-Proceduren tar tre parametrar som säger från-konto, till-konto och summan som skall flyttas.
-
-Låt oss göra en minimal procedur för att anropa den, som ett litet test.
-
-```sql
-DROP PROCEDURE IF EXISTS move_money;
-
-DELIMITER ;;
-
-CREATE PROCEDURE move_money(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
-)
+RETURNS INTEGER
+DETERMINISTIC
 BEGIN
-    SELECT p_from_account, p_to_account, p_amount;
+    RETURN p_score + 1;
 END
 ;;
 
 DELIMITER ;
 ```
 
-Notera att procedurens parameterlista har samma datatyper som vi är vana vid från kolumnerna i tabeller.
+Funktionen tar en parameter och returnerar ett värde. För tillfället returneras samma värde vi skickar in i funktionen, men med +1.
 
-Vi väljer att lägga ett `p_` framför varje parameter så att vi på det viset kan ha koll på om det är en parameter.
+Som du ser så används DELIMITER till att avgränsa koden så att semikolon fungerar som avslutare, inne i funktionens body.
 
-Du kan nu skapa proceduren med koden ovan, den skall fungera.
+En funktion ser ut som en lagrad procedur, det som skiljer är att funktionen returnerar ett värde via konstruktionen `RETURNS INTEGER`. En lagrad procedur kan inte returnera ett värde på det viset, en lagrad procedure producerar resultset och kan ha parametrar som är IN/OUT.
 
-Glöm inte DELIMITER, jag kommer inte att visa dem i kommande exempel.
+Funktionen kan användas så här.
 
-
-
-### SHOW CREATE PROCEDURE
-
-Du kan verifiera att proceduren skapades med följande kommandon.
-
-```sql title="Visa hur proceduren är skapad."
-SHOW CREATE PROCEDURE move_money \G
+```sql
+SELECT
+    `acronym`,
+    `score`,
+    grade(score) AS 'grade'
+FROM `exam`;
 ```
 
-Det kan se ut så här.
+Kör man mot tabellen så blir utskriften så här.
 
-```sql title="Exempel på hur proceduren kan vara skapad."
-MariaDB [mydb]> SHOW CREATE PROCEDURE move_money \G
-*************************** 1. row ***************************
-           Procedure: move_money
-            sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
-    Create Procedure: CREATE DEFINER=`maria`@`localhost` PROCEDURE `move_money`(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
+```sql
+MariaDB [mydb]> SELECT
+    ->     `acronym`,
+    ->     `score`,
+    ->     grade(score) AS 'grade'
+    -> FROM `exam`;
++---------+-------+-------+
+| acronym | score | grade |
++---------+-------+-------+
+| adam    |    77 |    78 |
+| john    |    63 |    64 |
+| june    |    49 |    50 |
+| meta    |    97 |    98 |
+| siva    |    88 |    89 |
+| ubbe    |    52 |    53 |
++---------+-------+-------+
+```
+
+Låt oss göra en smartare funktion som kan ge oss betyget enligt betygsskalan.
+
+
+
+## Funktion för betygsättning
+
+I en funktion kan vi skriva compound statements. Det låter som vi kan lösa uppgiften med en IF, ELSEIF och END IF-sats.
+
+Glöm inte att ändra return-typen till `CHAR(2)` så den matchar det som nu returneras.
+
+```sql
+--
+-- Function for grading an exam A-F, FX.
+--
+DROP FUNCTION IF EXISTS grade;
+DELIMITER ;;
+
+CREATE FUNCTION grade(
+    score INTEGER
 )
+RETURNS CHAR(2)
+DETERMINISTIC
 BEGIN
-    SELECT p_from_account, p_to_account, p_amount;
+    IF score >= 90 THEN
+        RETURN 'A';
+    ELSEIF score >= 80 THEN
+        RETURN 'B';
+    ELSEIF score >= 70 THEN
+        RETURN 'C';
+    ELSEIF score >= 60 THEN
+        RETURN 'D';
+    ELSEIF score >= 55 THEN
+        RETURN 'E';
+    ELSEIF score >= 50 THEN
+        RETURN 'Fx';
+    END IF;
+    RETURN 'F';
+END
+;;
+
+DELIMITER ;
+```
+
+Då kan vi provköra SELECT och använda funktionen för att skapa en betygslista.
+
+```sql
+SELECT
+    `acronym`,
+    `score`,
+    grade(score) AS 'grade'
+FROM `exam`
+ORDER BY `score` DESC;
+```
+
+Så här kan det se ut.
+
+```sql
+MariaDB [mydb]> SELECT
+    ->     `acronym`,
+    ->     `score`,
+    ->     grade(score) AS 'grade'
+    -> FROM `exam`
+    -> ORDER BY `score` DESC;
++---------+-------+-------+
+| acronym | score | grade |
++---------+-------+-------+
+| meta    |    97 | A     |
+| siva    |    88 | B     |
+| adam    |    77 | C     |
+| john    |    63 | D     |
+| ubbe    |    52 | Fx    |
+| june    |    49 | F     |
++---------+-------+-------+
+```
+
+Fint, det verkar som det fungerar som tänkt. Så använder man alltså en lagrad funktion i en SELECT-sats. Det är ett kraftfullt verktyg som kan göra SQL-koden mer läsbar och mer strukturerad, eller som ett sätt att göra komplexa frågor mer hanterbara genom att dela upp kod i mindre delar.
+
+Om du läser på om compound statements så ser du att man även kan göra en SWITCH/CASE-sats, det är ett alternativ till IF/ELSEIF/END IF. Det kan vara mer läsbart i vissa fall. Testa gärna att skriva om funktionen med SWITCH/CASE istället för IF/ELSEIF.
+
+<details>
+<summary>Den lagrade funktionen med SWITCH/CASE.</summary>
+
+Här är funktionen omskriven med SWITCH/CASE.
+
+Först ser vi en variant som returnerar i varje CASE-sats.
+
+```sql
+CREATE FUNCTION `grade`(
+    p_score INTEGER
+)
+RETURNS CHAR(2)
+DETERMINISTIC
+BEGIN
+    CASE
+        WHEN p_score >= 90 THEN RETURN 'A';
+        WHEN p_score >= 80 THEN RETURN 'B';
+        WHEN p_score >= 70 THEN RETURN 'C';
+        WHEN p_score >= 60 THEN RETURN 'D';
+        WHEN p_score >= 55 THEN RETURN 'E';
+        WHEN p_score >= 50 THEN RETURN 'Fx';
+        ELSE RETURN 'F';
+    END CASE;
+END
+;;
+```
+
+Här är en variant där vi använder CASE som ett "statement"
+
+```sql
+CREATE FUNCTION `grade`(
+    p_score INTEGER
+)
+RETURNS CHAR(2)
+DETERMINISTIC
+BEGIN
+    RETURN (
+        CASE
+            WHEN p_score >= 90 THEN 'A'
+            WHEN p_score >= 80 THEN 'B'
+            WHEN p_score >= 70 THEN 'C'
+            WHEN p_score >= 60 THEN 'D'
+            WHEN p_score >= 55 THEN 'E'
+            WHEN p_score >= 50 THEN 'Fx'
+            ELSE 'F'
+        END
+    );
+END
+;;
+```
+
+Du får själv bedöma om du tycker att någon av dessa varianter blev bättre än den med IF/ELSEIF.
+
+</details>
+
+
+
+## Skapa ytterligare en funktion
+
+Läraren blir plötsligt uppmärksammad på att betygsskalan var en annan, för en del av studenterna. En skala som gick mellan 3-5 och U.
+
+Så här ser lärarens uppdaterade betygstabell ut, en kombination mellan betygen A-F och U,3-5.
+
+| A-F | U,3-5 | Poäng | Definition |
+|:---:|:-----:|:-----:|------------|
+| A   | 5     | 90+   | UTMÄRKT – enastående resultat. |
+| B   | 4     | 80+   | MYCKET BRA – klart över medelstandard. |
+| C   | 4     | 70+   | BÄTTRE ÄN BRA – allmänt bra arbete. |
+| D   | 3     | 60+   | BRA – en fullgod prestation. |
+| E   | 3     | 55+   | GODKÄNT – resultatet uppfyller minimikriterierna. |
+| FX  | -     | 54-   | KOMPLETTERA – mer arbete krävs innan betyg kan sättas. |
+| F   | U     | 50-   | OTILLRÄCKLIGT – (avsevärt) mer arbete krävs. |
+
+Låt oss hjälpa läraren och lösa detta med en ny funktion som ger betyg enligt skalan U, 3-5.
+
+```sql
+--
+-- Function for grading an exam U, 3-5.
+--
+DROP FUNCTION IF EXISTS `grade2`;
+DELIMITER ;;
+
+CREATE FUNCTION `grade2`(
+    p_score INTEGER
+)
+RETURNS CHAR(1)
+DETERMINISTIC
+BEGIN
+    IF p_score >= 90 THEN
+        RETURN '5';
+    ELSEIF p_score >= 70 THEN
+        RETURN '4';
+    ELSEIF p_score >= 55 THEN
+        RETURN '3';
+    END IF;
+    RETURN 'U';
+END
+;;
+
+DELIMITER ;
+```
+
+Egentligen är det samma sak en gång till, nu är det bara andra värden som skall testas och returneras.
+
+Nu kan läraren ta ut sin betygslista så blir det tydligt att se vilket betyg som är aktuellt för varje student.
+
+```sql
+SELECT
+    `acronym`,
+    `score`,
+    grade(score) AS 'A-F, FX',
+    grade2(score) AS 'U, 3-5'
+FROM `exam`
+ORDER BY `score` DESC;
+```
+
+Så här kan det se ut.
+
+```sql
+MariaDB [mydb]> SELECT
+    ->     `acronym`,
+    ->     `score`,
+    ->     grade(score) AS 'A-F, FX',
+    ->     grade2(score) AS 'U, 3-5'
+    -> FROM `exam`
+    -> ORDER BY `score` DESC;
++---------+-------+---------+--------+
+| acronym | score | A-F, FX | U, 3-5 |
++---------+-------+---------+--------+
+| meta    |    97 | A       | 5      |
+| siva    |    88 | B       | 4      |
+| adam    |    77 | C       | 4      |
+| john    |    63 | D       | 3      |
+| ubbe    |    52 | Fx      | U      |
+| june    |    49 | F       | U      |
++---------+-------+---------+--------+
+```
+
+Vi har fått ett exempel på hur lagrade funktioner kan användas för att presentera informationen på olika sätt och förenkla kodstrukturen kring en annars mer komplex SELECT-sats.
+
+
+
+## Karaktäristik av en funktion
+
+I de funktioner vi skapat ovan har vi angivit dem med nyckelordet `DETERMINISTIC`. Det innebär en deklaration av funktionen som säger att den alltid returnerar samma svar givet den parameter som skickas in.
+
+Motsatsen är `NOT DETERMINISTIC` och för att ta ett exempel så har vi en funktion som returnerar nuvarande tid, resultatet som returneras är alltid beroende av andra omständigheter (klockan) än de parametrar som eventuellt skickas in till funktionen. En annan variant av en NOT DETERMINISTIC funktion vore en funktion som beräknar en ålder utifrån ett födelsedatum, det som returneras är inte enbart beroende av parametern födelsedatum.
+
+```sql
+--
+-- Example of a NOT DETERMINISTIC function.
+--
+DROP FUNCTION IF EXISTS `time_of_the_day`;
+DELIMITER ;;
+
+CREATE FUNCTION `time_of_the_day`()
+RETURNS DATETIME
+NOT DETERMINISTIC NO SQL
+BEGIN
+    RETURN NOW();
+END
+;;
+
+DELIMITER ;
+```
+
+Så här ser det ut när funktionen används.
+
+```sql
+MariaDB [mydb]> SELECT time_of_the_day();
++---------------------+
+| time_of_the_day()   |
++---------------------+
+| 2026-02-27 17:08:33 |
++---------------------+
+```
+
+I definitionen av funktionen `time_of_the_day()` ser du att `NO SQL` anges. Det är en deklaration som säger att funktionen inte använder några SQL-satser. Motsatsen hade varit deklarationen `CONTAINS SQL`.
+
+Det finns även deklarationer för `READS SQL DATA` och `MODIFIES SQL DATA`.
+
+Dessa deklarationer anges av den som skapar funktionen och databasservern _kan_ använda informationen för att optimera körningarna. Om man deklarerar sin funktion på fel sätt så kan det ge upphov till oväntade resultat.
+
+
+
+## SHOW FUNCTION
+
+När man vill se vilka funktioner som finns i databasen så kan man visa dem.
+
+```sql
+SHOW FUNCTION STATUS;
+SHOW FUNCTION STATUS LIKE 'grade' \G
+SHOW FUNCTION STATUS WHERE Db = 'mydb';
+```
+
+Med LIKE kan du söka och avgränsa mot funktionens namn.
+
+Med WHERE kan du göra avgränsningar av resultatet och bara visa de funktioner där kolumnvillkoret matchar.
+
+Det kan se ut så här när du använder LIKE.
+
+```sql
+MariaDB [mydb]> SHOW FUNCTION STATUS LIKE 'grade' \G
+*************************** 1. row ***************************
+                  Db: mydb
+                Name: grade
+                Type: FUNCTION
+             Definer: dbadm@localhost
+            Modified: 2026-02-27 17:08:24
+             Created: 2026-02-27 17:08:24
+       Security_type: DEFINER
+             Comment: 
+character_set_client: utf8mb3
+collation_connection: utf8mb3_general_ci
+  Database Collation: utf8mb4_unicode_ci
+```
+
+Det kan se ut så här när du använder WHERE.
+
+```sql
+MariaDB [mydb]> SHOW FUNCTION STATUS WHERE Db = 'mydb';
++------+-----------------+----------+-----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| Db   | Name            | Type     | Definer         | Modified            | Created             | Security_type | Comment | character_set_client | collation_connection | Database Collation |
++------+-----------------+----------+-----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+| mydb | grade           | FUNCTION | dbadm@localhost | 2026-02-27 17:08:24 | 2026-02-27 17:08:24 | DEFINER       |         | utf8mb3              | utf8mb3_general_ci   | utf8mb4_unicode_ci |
+| mydb | grade2          | FUNCTION | dbadm@localhost | 2026-02-27 17:08:24 | 2026-02-27 17:08:24 | DEFINER       |         | utf8mb3              | utf8mb3_general_ci   | utf8mb4_unicode_ci |
+| mydb | time_of_the_day | FUNCTION | dbadm@localhost | 2026-02-27 17:08:24 | 2026-02-27 17:08:24 | DEFINER       |         | utf8mb3              | utf8mb3_general_ci   | utf8mb4_unicode_ci |
++------+-----------------+----------+-----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+
+```
+
+Svaret blir en lista med alla de funktioner som finns och till vilken databas de är kopplade.
+
+Vill du sedan titta på koden som ligger bakom funktioner så frågar du efter den.
+
+```sql
+SHOW CREATE FUNCTION grade \G
+```
+
+Fram kommer källkoden för funktionen.
+
+```sql
+mysql> SHOW CREATE FUNCTION grade \G
+*************************** 1. row ***************************
+            Function: grade
+            sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+     Create Function: CREATE DEFINER=`dbadm`@`localhost` FUNCTION `grade`(p_score INTEGER
+) RETURNS char(2) CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci
+    DETERMINISTIC
+BEGIN
+    IF score >= 90 THEN
+        RETURN "A";
+    ELSEIF score >= 80 THEN
+        RETURN "B";
+    ELSEIF score >= 70 THEN
+        RETURN "C";
+    ELSEIF score >= 60 THEN
+        RETURN "D";
+    ELSEIF score >= 55 THEN
+        RETURN "E";
+    ELSEIF score >= 50 THEN
+        RETURN "FX";
+    END IF;
+    RETURN "F";
 END
 character_set_client: utf8mb3
 collation_connection: utf8mb3_general_ci
   Database Collation: utf8mb4_unicode_ci
 ```
 
-Du kan se vilket character set och collation som användes och du ser att skaparen är den användare som du är inloggad som.
 
-```sql title="Vem skapade proceduren?"
-DEFINER=`maria`@`localhost`
-```
 
-Försäkra dig om att du verkligen har "maria" som definer. Annars blir det problem vid rättning.
+## Funderingar
 
+Eftersom vi kan skriva compound statements i funktionens body så har vi stora möjligheter att utföra saker i en funktion. Det kan vara enklare utskrifts/rapportstöd, eller kanske en uppslagning i andra tabeller för att hämta värden liknande en subquery.
 
+Man får dock ha i åtanke att en funktion som används i en SELECT-sats kommer att köras för varje rad i resultatet, så det gäller att tänka på prestanda och att inte göra onödigt tunga operationer i en funktion som används i en SELECT-sats. Det är en av nackdelarna med att använda funktioner, det kan ge prestandaproblem om man inte är försiktig. Det är också en av anledningarna till att man inte kan göra vissa saker i en funktion, t.ex. att modifiera data i tabeller, det är inte tillåtet i en funktion som används i en SELECT-sats.
 
-### Anropa en lagrad procedur
+Finns det inte andra sätt att lösa problemet i exemplet? Jo det finns det säkert. Men det är ändå ett rimligt exempel som visar hur du kan ha nytta av lagrade funktioner.
 
-Procedurens body är nu på plats, inom ramen av `BEGIN` och `END`. I detta fallet är det en SELECT-sats som kommer att "skriva ut", eller producera, det resultset som blir resultatet från SELECT-satsen.
-
-Då anropar vi proceduren.
-
-```sql title="Anrop till en lagrad procedur."
-CALL move_money('1111', '2222', 1.5);
-```
-
-Så här kan det se ut i terminalen.
-
-```sql title="Så här ser det ut i terminalen när anropet sker."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+----------------+--------------+----------+
-| p_from_account | p_to_account | p_amount |
-+----------------+--------------+----------+
-| 1111           | 2222         |     1.50 |
-+----------------+--------------+----------+
-1 row in set (0,000 sec)
-
-Query OK, 0 rows affected (0,000 sec)
-```
-
-Resultatet blir att parametrarna skrivs ut i SQL-satsen, som en form av resultat från proceduren. En enkel procedur kan alltså vara att samla en eller flera SELECT-satser och skriva ut dem.
-
-Bra, då kan vi skapa och anropa en lagrad procedur, och även skicka parametrar till den. Det är en god start.
-
-
-
-### Procedur för move_money
-
-Då plockar vi in koden som flyttar pengarna, in i proceduren. Det kan se ut så här. Det är alltså koden inom BEGIN / END som ändrar sig.
-
-```sql
-CREATE PROCEDURE move_money(
-    p_from_account CHAR(4),
-    p_to_account CHAR(4),
-    p_amount NUMERIC(4, 2)
-)
-BEGIN
-    START TRANSACTION;
-
-    UPDATE account SET balance = balance - p_amount WHERE id = p_from_account;
-    UPDATE account SET balance = balance + p_amount WHERE id = p_to_account;
-
-    COMMIT;
-
-    SELECT * FROM account;
-END
-;;
-```
-
-Ovan SQL-kod flyttar pengar från ett konto till ett annat, inom ramen för en transaktion.
-
-Nu kan jag anropa proceduren, om och om igen. Om jag kör den tillräckligt många gånger så kommer Eva att bli riktigt rik och Adam motsvarande fattig.
-
-```sql
-CALL move_money('1111', '2222', 1.5);
-```
-
-Att jag väljer att skriva ut behållningen i slutet med SELECT-satsen är (för tillfället) bara för att det skall vara enklare att utveckla, det blir lite som en `console.log()` eller `echo`. Det är alltså en variant av hur man kan debugga sin lagrade procedur.
-
-Så här långt har vi skapat en lagrad procedur som omsluter en större kodsekvens som jag troligen vill utföra många gånger. Det blir som ett API mot min databas. Om man vill flytta pengar mellan konton så är det rätta sättet att göra det via den lagrade proceduren, inte att skriva egen SQL-kod. Lagrade procedurer kan alltså vara ett sätt att bygga API mot databasen.
-
-Kom ihåg att koden för lagrade procedurer inte nödvändigtvis är kompatibel mellan olika databasmotorer. Det kan vara en nackdel, eller inte.
-
-Provkör din lagrade procedur så att du vet att den fungerar. Anrop atillräckligt många gånger så att det blir minus på Adams konto.
-
-```sql title="Nu är det minus hos Adam."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+------+------+---------+
-| id   | name | balance |
-+------+------+---------+
-| 1111 | Adam |   -0.50 |
-| 2222 | Eva  |   17.50 |
-+------+------+---------+
-```
-
-
-
-## Kolla om pengar finns
-
-Då skall vi se om vi kan uppdatera den lagrade proceduren för att kontrollera att det verkligen finns pengar på kontot, innan flyttan av pengar utförs.
-
-Det första jag vill ha är en lokal variabel som jag tänker fylla med nuvarande balans på kontot. Om balansen inte är tillräcklig så kommer jag att avbryta transaktionen med en ROLLBACK.
-
-
-
-### Lokal variabel
-
-Låt oss börja kika på den lokala variabeln `v_current_balance` och hur den får sitt värde. Notera att jag väljer att användaa prefix `v_` för lokala variabler.
-
-```sql
-BEGIN
-    DECLARE v_current_balance NUMERIC(4, 2);
-
-    START TRANSACTION;
-
-    SELECT balance INTO v_current_balance 
-        FROM account 
-        WHERE id = p_from_account 
-        FOR UPDATE;
-
-    SELECT v_current_balance;
-
-    -- Some code omitted
-END
-;;
-```
-
-Notera att variabeln  får sitt värde inuti transaktionen, all kod, även testet om det finns pengar från kontot, måste dra nytta av transaktionens atomära princip och att transaktioner är isolerade från varandra. Vi måste dock använda `FOR UPDATE` i samband med SELECT-satsen för att signalera att datan används inom ramen för transaktionen tillsammans med en UPDATE sats.
-
-Om man kör den uppdaterade proceduren i sin helhet så kan man se att det är två SELECT som skrivs ut från den.
-
-```sql title="Två utskrifter från proceduren."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+-------------------+
-| v_current_balance |
-+-------------------+
-|             -3.50 |
-+-------------------+
-1 row in set (0,000 sec)
-
-+------+------+---------+
-| id   | name | balance |
-+------+------+---------+
-| 1111 | Adam |   -5.00 |
-| 2222 | Eva  |   22.00 |
-+------+------+---------+
-```
-
-Det första som skrivs ut är den nuvarande balansen och den andra är resultatet efter att flytten är utförd.
-
-
-
-### IF-sats
-
-Då kan vi skapa en if-sats [`IF.. ELSE.. END IF`](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/if), med compound statement, som kontrollerar om nuvarande balansen är tillräcklig för att flytta pengarna.
-
-```sql
-BEGIN
-    -- Some code omitted
-
-    IF v_current_balance - p_amount < 0 THEN
-        ROLLBACK;
-        SELECT 'Amount on the account is not enough to make transaction.' AS message;
-    ELSE
-        UPDATE account SET balance = balance - p_amount WHERE id = p_from_account;
-        UPDATE account SET balance = balance + p_amount WHERE id = p_to_account;
-        COMMIT;
-    END IF;
-
-    SELECT * FROM account;
-END
-;;
-```
-
-Jag valde att omsluta koden i IF-satsen, det finns nämligen ingen `RETURN` i en lagrad procedur, vilket hade varit ett alternativ när man väl förstod att transaktionen inte kunde utföras. Men, om man läser manualen noga så finner man [`LEAVE`](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements/leave) vilket skulle kunna göra koden för den lagrade proceduren, aningen snyggare genom att undvika ELSE delen. Pröva gärna det på egen hand.
-
-När man provkör den uppdaterade proceduren kan det se ut så här.
-
-```sql title="Misslyckas att flytta pengar."
-MariaDB [mydb]> CALL move_money('1111', '2222', 1.5);
-+-------------------+
-| v_current_balance |
-+-------------------+
-|             -5.00 |
-+-------------------+
-1 row in set (0,000 sec)
-
-+----------------------------------------------------------+
-| message                                                  |
-+----------------------------------------------------------+
-| Amount on the account is not enough to make transaction. |
-+----------------------------------------------------------+
-1 row in set (0,000 sec)
-
-+------+------+---------+
-| id   | name | balance |
-+------+------+---------+
-| 1111 | Adam |   -5.00 |
-| 2222 | Eva  |   22.00 |
-+------+------+---------+
-2 rows in set (0,000 sec)
-```
-
-Här ser man att det är negativ balans på kontot och det blir då ROLLBACK i transaktionen. Själva utskrifterna från proceduren är mest för att visualisera vad som händer, så att vi kan följa flödet.
-
-
-## Compound statement
-
-Ovan är DECLARE och IF-sats är exempel på kod som är ett compound statement. För att se fler konstruktioner som går att använda så har manualen ett stycke om [Programmatic & Compound Statements](https://mariadb.com/docs/server/reference/sql-statements/programmatic-compound-statements).
-
-Du kan läsa om variabler, hur de kan deklareas, sättas med ett hårdkodat värde eller få ett värde från en SQL-sats.
-
-Du kan läsa om loop-konstruktioner, if-satser och case.
-
-Det är helt enkelt ett eget programmeringsspråk, inuti databasen.
-
-
-
-## Lokala variabler 
-
-Innan vi går vidare så vill jag visa konceptet med lokala variabler och hur man även kan använda det för att mellanlagra information i ett SQL-skript. Detta handlar alltså inte enbart om compound statements, utan även om hantering av variabler i traditionell SQL-kod.
-
-Man kan sätta värdet på en lokal variabel, inuti ett SQL-skript, och använda det på följande sätt.
-
-```sql
---
--- Define and use local variable
---
-SET @answer = 42;
-SELECT @answer;
-```
-
-Kör man koden ovan så ser det ut så här.
-
-```sql
-mysql> SET @answer = 42;
-Query OK, 0 rows affected (0.00 sec)
-
-mysql> SELECT @answer;
-+---------+
-| @answer |
-+---------+
-|      42 |
-+---------+
-1 row in set (0.00 sec)
-```
-
-Man kan också tilldela en variabel ett resultat från en SELECT-fråga.
-
-```sql
---
--- Set local variable from a resultset
---
-SET @answer = (SELECT 42);
-SELECT @answer;
-```
-
-Det kan se ut så här.
-
-```sql
-mysql> SET @answer = (SELECT 42);
-Query OK, 0 rows affected (0.01 sec)
-
-mysql> SELECT @answer;
-+---------+
-| @answer |
-+---------+
-|      42 |
-+---------+
-1 row in set (0.00 sec)
-```
-
-Man kan också köra en `SELECT...INTO` som kan lagra information från flera kolumner in i variabler.
-
-```sql
---
--- Select mutiple into variables
---
-SELECT 1, 2 INTO @a, @b;
-SELECT @a, @b;
-```
-
-Det kan se ut så här när man kör det.
-
-```sql
-mysql> SELECT 1, 2 INTO @a, @b;
-Query OK, 1 row affected (0.00 sec)
-
-mysql> SELECT @a, @b;
-+------+------+
-| @a   | @b   |
-+------+------+
-|    1 |    2 |
-+------+------+
-1 row in set (0.00 sec)
-```
-
-Denna hantering av variabler kallas i manualen för "[User-Defined Variables](https://mariadb.com/docs/server/reference/sql-structure/sql-language-structure/user-defined-variables)".
-
-Du kan använda detta sättet för att hantera variabler även inuti en lagrad procedur, detta sättet och DECLARE är två sätt du kan välja att använda för variabler, antingen i ditt SQL-script eller i ett compund statement.
-
-
-
-## IN och UT parametrar
-
-En lagrad procedur kan ta IN, OUT och INOUT parametrar. Det vi använt hittills är IN parametrar. Låt oss se ett exempel på hur det ser ut.
-
-Här är ett exempel på en lagrad procedur `get_money` som tar `IN account` för att kontrollera hur mycket pengar som finns på kontot och det resulterande värdet sätts i parametern `OUT total`. Den som anropar proceduren kan alltså använda värdet på `total` utanför proceduren.
-
-```sql
-CREATE PROCEDURE get_money(
-    IN p_account CHAR(4),
-    OUT p_total NUMERIC(4, 2)
-)
-BEGIN
-    SELECT balance INTO p_total FROM account WHERE id = p_account;
-END
-;;
-```
-
-Proceduren tar två argument, det ena är IN och det andra är OUT.
-
-I SELECT-satsen hämtas ett värde från databasen och lagras i variabeln `p_total`.
-
-Så här kan det se ut när vi anropar proceduren och bifogar en variabel att spara totalen i.
-
-```sql
-CALL get_money('1111', @sum);
-SELECT @sum;
-```
-
-När anropet sker med CALL så bifogas en variabel som efter anropet kan läsas av och användas vidare.
-
-Det kan se ut så här när vi kör anropen ovan.
-
-```sql
-mysql> CALL get_money('1111', @sum);
-Query OK, 1 row affected (0.00 sec)
-
-mysql> SELECT @sum;
-+------+
-| @sum |
-+------+
-| 7.00 |
-+------+
-1 row in set (0.00 sec)
-```
-
-Här ser vi alltså hur en lagrad procedur kan samverka med en variabel.
-
-En lagrad procedur kan även ta ett argument som är INOUT, det betyder både IN och OUT. Proceduren tar värdet som IN parameter och kan sedan uppdatera innehållet i variabeln. Den som anropar proceduren kan sedan använda det uppdaterade värdet.
-
-
-
-## SHOW WARNINGS
-
-Ibland kan man se att man får en varning av ett anrop till en lagrad procedur. I följande exempel anger jag ett värde på en variabeln som är utanför variabelens range.
-
-```sql
-mysql> CALL edit_account('1337', 'Mega', 4200000);
-Query OK, 1 row affected, 1 warning (0.00 sec)
-```
-
-För att se vad varningen säger så kan jag läsa av den.
-
-```sql
-mysql> SHOW WARNINGS;
-+---------+------+---------------------------------------------------+
-| Level   | Code | Message                                           |
-+---------+------+---------------------------------------------------+
-| Warning | 1264 | Out of range value for column 'p_balance' at row 1 |
-+---------+------+---------------------------------------------------+
-1 row in set (0.00 sec)
-```
-
-Det kan vara bra att ha koll på detta, det är en felkälla och ett bra verktyg för felsökning och utveckling.
-
-
-
-## SHOW PROCEDURE
-
-När man vill se vilka procedurer som finns i databasen så kan man visa dem. Här visar jag de procedurer som slutar på delsträngen `%money`.
-
-```sql
-SHOW PROCEDURE STATUS LIKE '%money';
-```
-
-Svaret blir en lista med alla de procedurer som finns och till vilken databas de är kopplade samt vilken användare som skapade dem.
-
-Vill du sedan titta på koden som ligger bakom den lagrade proceduren så frågar du efter den.
-
-```sql
-SHOW CREATE PROCEDURE move_money \G;
-```
-
-Fram kommer källkoden för proceduren och man kan kontrollera/felsöka att det är "rätt version" som man använder.
-
-Tänk på att du kan använda `ALTER PROCEDURE`, som ett alternativ till `DROP/CREATE`. Det kan vara smidigt, till exempel när man utvecklar och hela tiden skapar om proceduren och testar små ändringar.
+Vi har många verktyg i lådan som används för att lösa problem och utmaningar som uppstår. Man ska bara välja rätt verktyg i rätt situation, det är lite det som är utmaningen. 
 
 
 
 ## Avslutningsvis
 
-Detta var grunderna i hur du kan jobba med lagrade procedurer som ett sätt att programmera i en databas. Kanske kan detta även vara ett sätt att bygga ett API mot en databas.
+Detta var grunderna i hur funktioner fungerar, hur du skapar och använder dem.
 
+Liksom lagrade procedurer och triggers så erbjuder även funktioner ett sätt att tänka i form av API mot en databas. Funktioner kan användas för att styra upp vilken information som användaren får vid en viss fråga.

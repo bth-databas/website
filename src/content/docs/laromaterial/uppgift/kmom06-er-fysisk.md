@@ -54,7 +54,7 @@ Missa inte att dokumentera varje steg i ditt ER-dokument.
 
 1. Verifiera att du kan köra `setup.sql` minst två gånger efter varandra och databasen skapas korrekt.
 
-1. Avslutningsvis så gör du reverse engineering av din färdiga databas för att generera en ER-modell, ta en skärdump (eller liknande) av resultatet och spara den i `schema.pdf`.
+1. Avslutningsvis så gör du reverse engineering av din färdiga databas för att generera en ER-modell, ta en skärmdump (eller liknande) av resultatet och spara den i `schema.pdf`.
 
 Vi väntar till nästa vecka för att fylla databasen med innehåll och då börja använda den "på riktigt".
 
