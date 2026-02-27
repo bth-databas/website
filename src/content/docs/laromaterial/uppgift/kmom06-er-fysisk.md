@@ -2,6 +2,7 @@
 title: "Uppgift: ER-modellering - fysisk (kmom06)" 
 description: "Uppgift att göra en fysisk modellering av en databas."
 revision:
+    "2026-02-27": "(B) Lägg till krav om att visa schema.pdf."
     "2026-02-20": "(A) Första utgåvan."
 sidebar:
     order: 0065
@@ -50,6 +51,8 @@ Missa inte att dokumentera varje steg i ditt ER-dokument.
 1. Använd PK och FK.
 
 1. Verifiera att du kan köra `setup.sql` minst två gånger efter varandra och databasen skapas korrekt.
+
+1. Avslutningsvis så gör du reverse engineering av din färdiga databas för att generera en ER-modell, ta en skärdump av resultatet och spara den i `schema.pdf`.
 
 Vi väntar till nästa vecka för att fylla databasen med innehåll och då börja använda den "på riktigt".
 
