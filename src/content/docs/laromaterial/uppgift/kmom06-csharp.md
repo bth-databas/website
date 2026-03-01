@@ -70,6 +70,8 @@ Utför följande krav.
 
 1. Använd enbart lagrade procedurer vid själva kopplingen mot CSharp.
 
+1. Se till att din databasmodell är uppdaterad i `bank.puml`.
+
 1. I övrigt skall databasen fungera enligt kraven i kmom05 för uppgiften.
 
 
