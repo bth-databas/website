@@ -14,9 +14,9 @@ import YouTube from '@components/YouTube.astro';
 * subquery
 */}
 
-Vi fortsätter med programmering i databasen, denna gången med "funktioner" som har en liknande struktur som lagrade procedurer och triggers.
+Vi fortsätter med programmering i databasen, denna gången med "lagrade funktioner" som har en liknande struktur som lagrade procedurer och triggers.
 
-Vi fyller databasen eshop med innehåll och provkör den så att (delar av) den fungerar. Vi börjar med att lista innehållet från tabeller och vi gör CRUD för att lägga till och redigera innehåll i tabellerna. Vi gör det via ett terminalprogram i CSharp.
+Vi fyller databasen eshop med innehåll och provkör den så att (delar av) den fungerar. Vi börjar med att lista innehållet från tabeller och vi gör CRUD (Create Read Update Delete) för att lägga till och redigera innehåll i tabellerna. Vi gör det via ett terminalprogram i CSharp.
 
 Vi tittar på begreppet om hur man normaliserar en databasmodell.
 
@@ -44,7 +44,7 @@ Läs följande:
     * Kap 9: Sammanfattning av SQL-kommandon
     * Kap 20: Programmering i databaser
 
-Det finns ytterligare kapitel i boken som är relaterat till modellering. De går utanför kursens omfattning, läs översiktligt.
+Det finns ytterligare kapitel i boken som är relaterat till modellering. Läs översiktligt.
 
 1. Databasteknik
     * Kap 3: Mer om datamodellering
@@ -96,7 +96,7 @@ Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
 Följande uppgifter skall utföras och resultatet skall redovisas.
 
-1. Jobba igenom "[Uppgift: EShop CRUD (kmom07)](/website/laromaterial/uppgift/kmom07-eshop/)" för att lära dig om triggers och vad du kan göra med dem.
+1. Jobba igenom "[Uppgift: EShop manage orders and orderdetails (kmom07)](/website/laromaterial/uppgift/kmom07-eshop/)" för att lära dig om triggers och vad du kan göra med dem.
 
 
 
@@ -106,14 +106,14 @@ Läs [instruktionen om hur du skall redovisa](/website/laromaterial/instruktion/
 
 Se till att följande frågor besvaras i din redovisningstext i din rapportsida.
 
-* Hur gick det att komma igång med funktioner?
-* Skriv ett kort stycke (2-5 meningar) om funktioner där du förklarar begreppen (fördel, nackdel, användningsområde) för en som inte är insatt.
+* Hur gick det att komma igång med lagrade funktioner?
+* Skriv ett kort stycke (2-5 meningar med egna ord) om funktioner där du förklarar begreppen (fördel, nackdel, användningsområde) för en som inte är insatt.
 
-* Vilket sätt valde du att fylla databasen, blev det INSERT, LOAD FROM INFILE eller tom excelark? Varför?
+* Vilket sätt valde du att fylla databasen, blev det INSERT, LOAD FROM INFILE eller tom excelark? Hur tänkte du kring detta?
 
-* Stötte du på några utmaningar när du byggde terminalprogrammet i CSharp? Hur tycker du att din kodstruktur är i applikationen, kommer det att vara lätt när du bygger ut koden i kommande kmom?
+* Hur flöt arbetet när du byggde terminalprogrammet i CSharp för din Eshop med lagrade procedurer, funktioner och triggers? Berätta hur det gick och vad du lärde dig.
 
-* Kan du kort förklara vad begreppet normalisering handlar om, för någon som ännu inte lärt sig det?
+* Kan du kort förklara vad begreppet normalisering handlar om, (2-5 meningar med egna ord), för någon som ännu inte lärt sig det?
 
 * Vilken är din TIL för detta kmom?
 
@@ -138,10 +138,11 @@ Andra timmen:
 
 * LOAD DATA INFILE och att fylla databasen från excelark.
 * Self join employee, boss OUTER JOIN employee
-* Lagerhantering, INSERT ON DUPLICATE KEY UPDATE
+* Soft delete
 
 {/*
 * subquery
+* Lagerhantering, INSERT ON DUPLICATE KEY UPDATE (nästa) (finns även i ordern)
 */}
 
 
