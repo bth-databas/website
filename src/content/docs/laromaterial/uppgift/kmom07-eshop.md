@@ -101,7 +101,7 @@ quit, q                    - Quit the application
 customer <search>          - Show all customers or filter by <search>
 product <search>           - Show all products or filter by <search>
 order <search>             - Show all orders or filter by <search>
-order <order_id>       - Show the order, order rows and order cost.
+order <order_id>           - Show the order, order rows and order cost.
 
 order_create <customer_id>          - Create a new order for the customer.
 order_add <order_id> <product_id> <amount> <price> - Add a new order row to the order.
