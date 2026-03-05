@@ -124,7 +124,7 @@ mariadb eshop < proc.sql
 mariadb eshop < insert.sql
 ```
 
-Flödet ovan behöver fungera, läraren testar din inlämning exakt på det viset. Det är okey att dela upp din kod i fler filer och göra source på dem samt att läsa in data från till exempel csv-filer.
+Flödet ovan behöver fungera, läraren testar din inlämning exakt på det viset. Det är tillåtet att dela upp din kod i fler filer och göra source på dem samt att läsa in data från till exempel csv-filer.
 
 Filerna `proc.sql` och `insert.sql` får inte innehålla ett `USE eshop` för att välja databas. Det gör att läraren får problem vid rättning.
 
