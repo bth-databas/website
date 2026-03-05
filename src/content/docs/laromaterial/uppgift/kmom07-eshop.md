@@ -93,6 +93,8 @@ Ditt terminalprogram skall byggas på samma sätt som du gjort i kmom04-06 med s
 
 Följande är de menyvalen som skall stödjas.
 
+<!-- Ändra kommandon product -> products och customer - customers? -->
+
 ```bash
 $ dotnet run
 m, menu, help, h           - Print out the menu.
