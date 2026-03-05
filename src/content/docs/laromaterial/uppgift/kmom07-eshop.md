@@ -69,7 +69,7 @@ Så här skall det fungera när en kund placerar en ny order.
 1. En ny order kan skapas till en kund. Det sparas en timestamp `created` för när ordern skapades.
 1. En order som är skapad, men innehåller inga orderrader, har statusen "created".
 
-1. Till en order kan man lägga till orderrader där varje orderrad innehåller en produkt, antal och ett försäljningspris. 
+1. Till en order kan man lägga till orderrader där varje orderrad innehåller en produkt, antal och ett försäljningspris. (Det pris som ligger i produkt-tabellen är inköpspriset)
 1. Varje gång en orderrad läggs till, eller tas bort, så skall en timestamp `updated` ändras i order-tabellen.
 1. När en order är uppdaterad så ändras dess status till "updated".
 
@@ -93,7 +93,7 @@ Ditt terminalprogram skall byggas på samma sätt som du gjort i kmom04-06 med s
 
 Följande är de menyvalen som skall stödjas.
 
-```text
+```bash
 $ dotnet run
 m, menu, help, h           - Print out the menu.
 quit, q                    - Quit the application
@@ -120,8 +120,8 @@ Kontrollera att du kan återskapa din databas enligt följande.
 ```bash title="Återskapa databas"
 # Gå till katalogen sql/
 mariadb < setup.sql
-mariadb eshop < insert.sql
 mariadb eshop < proc.sql
+mariadb eshop < insert.sql
 ```
 
 Kontrollera att databasen innehåller tillräckligt med data.
