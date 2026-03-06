@@ -3,6 +3,7 @@ title: "Övning CSharp med databasen Classic Models"
 description: "Övning för att komma igång med CSharp och hur man skriver program för att prata med en databas."
 author: mos
 revision:
+    "2026-03-06": "(B, mos) Förbättrade detaljer om Roslynator."
     "2026-01-31": "(A, mos) Första versionen."
 sidebar:
     order: 0310
@@ -528,7 +529,7 @@ Nu har vi nog grunderna på plats för att kunna bygga vidare med CSharp och dat
 
 
 
-## Linter Rosalynator
+## Linter Roslynator
 
 För att hjälpa till med kodkvalitet och stil kan vi använda Roslynator som är en samling av analysverktyg för CSharp.
 
@@ -559,27 +560,34 @@ Du kan läsa mer om Roslynator CLI här: [Roslynator CLI på GitHub](https://www
 
 Detta gör att du kan köra kommandot `roslynator` från terminalen var som helst.
 
-Här är exempel på hur du kan köra Roslynator från terminalen för att analysera och fixa kodstil i ditt projekt.
+Här är exempel på hur du kan köra Roslynator från terminalen för att analysera och fixa kodstilen i ditt projekt.
 
-```bash title="Kör Roslynator CLI för att analysera och fixa kodstil"
+```bash title="Kör Roslynator CLI för att analysera din kod."
 # Stå i katalogen för ditt C# projekt
 roslynator analyze
 ```
 
-Om du vill fixa till kodstilen automatiskt kan du använda följande kommando.
+Om du vill att Roslynator skall fixa till din kod automatiskt kan du använda följande kommando.
 
-```bash title="Kör Roslynator CLI för att fixa kodstil automatiskt"
+```bash title="Kör Roslynator CLI för att fixa koden automatiskt."
 # Stå i katalogen för ditt C# projekt
 roslynator fix
 ```
 
-Se alltid till att din kod passerar linterkontroller innan du gör en commit.
+Lär dig mer om roslynator via hjälpen.
+
+```bash title="Hjälpen visar vad roslynator kan göra."
+# Stå i katalogen för ditt C# projekt
+roslynator help
+```
+
+Se alltid till att din kod passerar `roslynator analyze` innan du gör en commit.
 
 
 
 ## EditorConfig
 
-Med tanke på lintning så kan det också vara vettigt att uppdatera din fil `.editorconfig` som ligger i roten av ditt kursrepo för att passa CSharp (och SQL).
+Med tanke på statisk kodanalys (att "linta" koden) så kan det också vara vettigt att uppdatera din fil `.editorconfig` som ligger i roten av ditt kursrepo för att passa CSharp (och SQL).
 
 Lägg till följande sektion i din `.editorconfig`-fil (skapa filen om du inte har den).
 
@@ -597,6 +605,8 @@ insert_final_newline = true
 sql_keyword_case = upper
 sql_identifier_case = lowercase
 ```
+
+Filen `editorconfig` bestämmer hur din kod formateras när du skriver in den i din texteditor, tex vscode.
 
 
 

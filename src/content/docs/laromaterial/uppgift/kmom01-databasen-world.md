@@ -14,6 +14,8 @@ TODO
 
 * Se över hur setup.sql namngivs i de olika kursmomentens uppgifterna, använd samma upplägg/filnamn konsekvent, tillåt att göra source för att dela upp filer i fler delar.
 * Se över namngivning i uppgifter och övningar kontra repot.
+    * Filer, filnamn
+    * Kommandon products versus product
 
 -->
 
