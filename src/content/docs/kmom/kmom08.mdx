@@ -1,6 +1,6 @@
 ---
-title: "⚠️ Kmom08: Index och prestanda"
-description: XXX.
+title: "Kmom08: Index och prestanda"
+description: Vi lär oss om optimering av databaser med index samt bygger lagerhantering till vår Eshop.
 revision:
   2026-01-01: (A, mos) Första versionen. 
 ---
@@ -9,16 +9,12 @@ import Figure from '@components/CustomFigure.astro';
 import YouTube from '@components/YouTube.astro';
 
 {/* TODO
-* backup av databas?
+* 
 */}
 
-:::danger
-Kursmomentet är ännu ej redigerat, informationen är inte korrekt.
-:::
+Vi studerar hur databasen jobbar internt för att optimera SQL-frågor och hur olika index kan användas för att optimera databasen.
 
-Vi studerar hur databasen jobbar internt för att optimera SQL-frågor och hur index kan användas för att optimera databasen.
-
-Vi jobbar vidare med vår databasapplikation.
+Vi jobbar vidare med vår databasapplikation och förbereder oss inför projektet.
 
 
 
@@ -40,7 +36,7 @@ Titta på följande inspelade föreläsningar. Föreläsningarna kan innehålla 
 
 Läs följande:
 
-1. [Databasteknik](kunskap/boken-databasteknik)
+1. Databasteknik
     * Kap 22: Index och prestanda
 
 1. [Boken har även en webbplats](http://www.databasteknik.se/webbkursen/) och vissa utdrag från boken finns där. Relevant för detta kmom är följande:
@@ -48,7 +44,7 @@ Läs följande:
 
 Det finns ytterligare ett kapitel i boken som är relaterat till prestanda, det går utanför kursens ram men läs vid intresse.
 
-1. [Databasteknik](kunskap/boken-databasteknik)
+1. Databasteknik
     * Kap 23: Fysiska lagringsstrukturer i databaser
 
 
@@ -62,6 +58,7 @@ Kika igenom följande artiklar.
 
 
 
+{/*
 ### Ai som lärare (instuderingsfrågor)
 
 Här finns ett antal instuderingsfrågor som hjälper dig att finna information på egen hand för att träna på de koncept som är relevanta för detta kmom.
@@ -74,6 +71,7 @@ Här finns ett antal instuderingsfrågor som hjälper dig att finna information 
 Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/share/68bafa23-4b84-8005-a745-451d43258c9a). Dina svar kan skifta från de som visas. Var alltid kritisk till dina källor.
 
 </details>
+*/}
 
 
 
@@ -87,7 +85,7 @@ Här är en [utskrift av när en frågesession genomförts](https://chatgpt.com/
 
 Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
-1. ⚠️ Jobba igenom övningen "[Index och prestanda i MySQL](kunskap/index-och-prestanda-i-mysql)" som tränar dig i hur du kan optimera dina databasfrågor med index. Spara dina testprogram i `me/kmom06/index`.
+1. Jobba igenom "[Övning: Index och prestanda i databas](/website/laromaterial/ovning/index-och-prestanda/)" som tränar dig i hur du kan optimera dina databasfrågor med olika typer av index.
 
 
 
@@ -95,7 +93,7 @@ Jobba igenom övningarna, de förbereder dig inför uppgifterna.
 
 Följande uppgifter skall utföras och resultatet skall redovisas.
 
-1. ⚠️ Uppgift med index och prestanda
+1. Jobba igenom "[Uppgift: EShop hantera lagret (kmom08)](/website/laromaterial/uppgift/kmom08-eshop/)" för att bygga ett lager till din Eshop.
 
 
 
@@ -105,7 +103,10 @@ Läs [instruktionen om hur du skall redovisa](/website/laromaterial/instruktion/
 
 Se till att följande frågor besvaras i din redovisningstext i din rapportsida.
 
-* (Skriv en utförligare beskrivning av hur man jobbar med index och vilka delar av tabellen som är viktig att sätta index på)
+* Ge en kort förklaring om hur du uppfattar begreppen "query optimizer" och "full table scan". 
+* Fanns det något extra upplysande som du tog med dig från övningen med index?
+* Hur skulle du själv sammanfatta de tips om index och prestanda som artikeln framför?
+* När du löste uppgiften, vilka index lade du till och till vilka tabeller?
 
 * Vilken är din TIL för detta kmom?
 
@@ -124,11 +125,15 @@ Följande är en plan för hur lärarteamet _kan_ lägga upp genomgångarna unde
 
 Första timmen:
 
-* 
+* Övningen med index och prestanda.
 
 Andra timmen:
 
-* 
+* INSERT ON DUPLICATE KEY UPDATE
+* Sub query
+* Backup (och verifiera backupen)
+* Om projektet
+
 
 
 ### Onsdag

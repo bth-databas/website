@@ -1,5 +1,5 @@
 ---
-title: "Uppgift: EShop manage orders and orderdetails (kmom07)" 
+title: "Uppgift: EShop hantera order och orderdetaljer (kmom07)" 
 description: "Uppgift att implementera delar av databasen eshop."
 revision:
     "2026-02-27": "(A) Första utgåvan."
@@ -12,6 +12,12 @@ Denna uppgift görs som en del av kmom07. Du jobbar vidare på den databasmodell
 Du skall implementera schemat för databasen eshop och börja jobba med den. Första steget, när schemat är på plats, är att fylla databasen med innehåll och implementera CRUD (Create Read Update Delete) mot vissa av tabellerna i databasen med hjälp av ett terminalprogram i CSharp.
 
 Denna uppgiften är också en del av det kommande projektet i kmom10, så den koden du skriver här kommer att vara en del av det examinerande kmom10. Det innebär att kodbasen du börjar på nu kommer att vara en del av din slutliga inlämning i kmom10.
+
+<!--
+TODO
+* `orders` visade antalet orderrader (COUNT), (OUT JOIN) samt någon order som är tom.
+* Ändra kommandon product -> products och customer - customers?
+-->
 
 
 
@@ -92,8 +98,6 @@ PSS. Att uppdatera orderns `updated` timestamp är tänkt att göras med en trig
 Ditt terminalprogram skall byggas på samma sätt som du gjort i kmom04-06 med samma typ av meny.
 
 Följande är de menyvalen som skall stödjas.
-
-<!-- Ändra kommandon product -> products och customer - customers? -->
 
 ```bash
 $ dotnet run
