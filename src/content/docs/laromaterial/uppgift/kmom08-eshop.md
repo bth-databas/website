@@ -2,6 +2,7 @@
 title: "Uppgift: EShop hantera lagret (kmom08)" 
 description: "Uppgift att fortsätta implementera delar av databasen eshop."
 revision:
+    "2026-03-09": "(B) Förtydliga hur backupen tas och att det är den som används vid rättning."
     "2026-03-08": "(A) Första utgåvan."
 sidebar:
     order: 0080
@@ -55,8 +56,15 @@ Utför följande krav.
 
 1. Uppdatera din databasmodell i filen `eshop.puml` med egen kraft eller med hjälp av din AI-kompis.
 
-1. Skapa en backup av din databas och spara i `sql/backup.sql`.
+1. Skapa en backup av din databas och spara i `sql/backup.sql`. Läs mer om hur du [skapar (och verifierar) en backupfil](https://github.com/bth-databas/forum/discussions/9). 
 
+    ```bash title="Skapa en backup av din databas."
+    mariadb-dump                          \
+        --routines                        \
+        --triggers                        \
+        --default-character-set=utf8mb4   \
+        eshop > backup.sql
+    ```
 
 
 ## Krav - En menydriven applikation
@@ -86,7 +94,14 @@ Då får gärna lägga till fler menyval som du tycker är intressanta, det är 
 
 ## Självtest
 
-Kontrollera att du kan återskapa din databas enligt följande.
+Försäkra dig om att din backupfil fungerar. När läraren återskapar din databas så kommer följande kommando att köras.
+
+```bash
+# Gå till katalogen sql/
+mariadb eshop < backup.sql
+```
+
+Kontrollera att du även kan återskapa din databas enligt följande.
 
 ```bash title="Återskapa databas"
 # Gå till katalogen sql/
@@ -95,7 +110,7 @@ mariadb eshop < proc.sql
 mariadb eshop < insert.sql
 ```
 
-Flödet ovan behöver fungera, läraren testar din inlämning exakt på det viset. Det är tillåtet att dela upp din kod i fler filer och göra source på dem samt att läsa in data från till exempel csv-filer.
+Flödet ovan behöver fungera, om din backupfil inte fungerar så kan läraren välja att prova att återställa din databas från dessa filer. Det är tillåtet att dela upp din kod i fler filer och göra source på dem samt att läsa in data från till exempel csv-filer.
 
 Filerna `proc.sql` och `insert.sql` får inte innehålla ett `USE eshop` för att välja databas. Det gör att läraren får problem vid rättning.
 
