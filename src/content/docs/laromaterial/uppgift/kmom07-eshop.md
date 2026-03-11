@@ -2,6 +2,7 @@
 title: "Uppgift: EShop hantera order och orderdetaljer (kmom07)" 
 description: "Uppgift att implementera delar av databasen eshop."
 revision:
+    "2026-03-11": "(B) Uppdatera kravet om order_del."
     "2026-02-27": "(A) Första utgåvan."
 sidebar:
     order: 0070
@@ -111,8 +112,14 @@ order <order_id>           - Show the order, order rows and order cost.
 
 order_create <customer_id>          - Create a new order for the customer.
 order_add <order_id> <product_id> <amount> <price> - Add a new order row to the order.
-order_del <order_id> <order_row>    - Remove an order row from the order.
 order_done <order_id>               - Mark the order as done, no more order rows can be added to the order.
+```
+
+Du skall även lägga till följande menyval som tar bort en rad i en order, välj en variant av hur du implementerar kommandot, antingen via `order_row` eller via `product_id`.
+
+```bash
+order_del <order_id> <order_row>    - Remove an order row from the order.
+order_del <order_id> <product_id>   - Remove a product from the order.
 ```
 
 Då får gärna lägga till fler menyval som du tycker är intressanta, det är helt ok att utöka funktionaliteten i terminalprogrammet så länge som det stödjer samtliga menyval enligt ovan.
