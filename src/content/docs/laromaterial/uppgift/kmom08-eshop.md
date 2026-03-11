@@ -54,9 +54,9 @@ Utför följande krav.
 
 1. Lägg till relevanta index till de tabeller som berörs av uppgiften. Lägg till minst tre index, förutom PK. Om du inte behöver tre index  i uppgiften, förutom PK, så leta vidare i din databasmodell och lägg till index där det behövs. Till exempel, se om förra veckans uppgift kan må bra av något index.
 
-1. Uppdatera din databasmodell i filen `eshop.puml` med egen kraft eller med hjälp av din AI-kompis.
+1. Uppdatera din databasmodell i filen `sql/eshop.puml` med egen kraft eller med hjälp av din AI-kompis.
 
-1. Skapa en backup av din databas och spara i `sql/backup.sql`. Läs mer om hur du [skapar (och verifierar) en backupfil](https://github.com/bth-databas/forum/discussions/9). 
+1. När du är helt klar, skapa en backup av din databas och spara i `sql/backup.sql`. Läs mer om hur du [skapar (och verifierar) en backupfil](https://github.com/bth-databas/forum/discussions/9). 
 
     ```bash title="Skapa en backup av din databas."
     mariadb-dump                          \
@@ -65,6 +65,7 @@ Utför följande krav.
         --default-character-set=utf8mb4   \
         eshop > backup.sql
     ```
+
 
 
 ## Krav - En menydriven applikation

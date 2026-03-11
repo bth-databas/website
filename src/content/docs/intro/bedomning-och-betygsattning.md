@@ -65,23 +65,11 @@ Följande tabell används vid bedömning av projektet.
 | Krav 2 är implementerat och fungerar felfritt. | 10 |
 | Krav 3 är implementerat och fungerar felfritt. | 10 |
 | Krav 4 är implementerat och fungerar felfritt. | 10 |
-| TOTALT | 40 |
+| Krav 5 är implementerat och fungerar felfritt. | 10 |
+| Krav 6 är implementerat och fungerar felfritt. | 10 |
+| TOTALT | 60 |
 
-För ett godkänt betyg krävs minst 20 poäng.
-
-
-
-### Examination
-
-Följande tabell används vid bedömning av examinationsuppgiften.
-
-| Bedömningspunkt | Poäng |
-|-----------------|:-----:|
-| Krav 1 är implementerat och fungerar felfritt. | 10 |
-| Krav 2 är implementerat och fungerar felfritt. | 10 |
-| TOTALT | 20 |
-
-För ett godkänt betyg krävs minst 10 poäng.
+För ett godkänt betyg krävs minst 30 poäng samt att de obligatoriska kraven 1-3 är implementerade.
 
 
 

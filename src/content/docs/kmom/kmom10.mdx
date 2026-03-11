@@ -5,7 +5,6 @@ description: Detta kursmoment examinerar och avslutar kursen.
 
 import Figure from '@components/CustomFigure.astro';
 import YouTube from '@components/YouTube.astro';
-import { FileTree } from '@astrojs/starlight/components';
 
 Detta kursmoment avslutar och examinerar kursen.
 
@@ -13,29 +12,26 @@ Du jobbar enskilt och tar inte hjälp av någon. Det du lämnar in är ditt eget
 
 Upplägget är enligt följande:
 
-* Projektet och redovisning (20-60h)
+* Projektet och redovisning (20-40h)
 
-Totalt omfattar kursmomentet (07/10) ca 20+20+20 studietimmar. Du kan själv styra din arbetsinsats genom att välja vilka optionella delar du utför.
+Totalt omfattar kursmomentet (09/10) ca 20+20 studietimmar. Du kan själv styra din arbetsinsats genom att välja vilka optionella delar du utför.
 
-{/* KRAV
-* Add new product, edit it
-* där varje produkt finns i en eller flera produktkategorier
-* invoice
-* picklist, ship, payed
-* backup
-*
-* Self test
-  * Add new product, (edit it)
-  * Add it to inv
-  * Order it
-  * Picklist
-  * Ship
-  * Pay
+:::danger
+
+Detta kmom är under utveckling och alla delar är ännu inte klara. De delar som finns kan komma att ändras.
+
+Påbörja inte arbetet med projektet förrän denna ruta är borttagen.
+
+:::
+
+{/* TODO
+* 
 */}
+
 
 ## Förutsättning
 
-Du har jobbat igenom kmom01-kmom06 (och redovisat dem). Det finns ingen anledning att påbörja projektet innan du är klar med kmom06.
+Du har jobbat igenom kmom01-kmom08 (och redovisat dem). Det finns ingen anledning att påbörja projektet innan du är klar med kmom08.
 
 
 
@@ -47,213 +43,158 @@ Det finns ett dokument som beskriver [grunderna för bedömning och betygsättni
 
 ## Projektidé och upplägg
 
-Du skall bygga en responsiv webbplats och en webbapplikation som innehåller HTML, CSS och JavaScript.
+Du skall fortsätta att bygga ut din eshop med innehåll i databasen och ett tillhörande terminalprogram i CSharp.
 
-Ungefär hälften av kraven är kopplade till HTML/CSS och hälften till JavaScript.
+Du behöver göra de krav som är grundläggande, de är obligatoriska att genomföra (krav 1-3).
 
-Det finns optionella delar som du kan välja att göra för att öka dina chanser till ett högre betyg.
-
-
-
-## Projektspecifikation
-
-Det är dags att marknadsföra dig själv och dina kunskaper. Spelet Duckhunt blev en succé världen över och marknaden skriker efter en uppföljare. Du funderar på om det ska bli "Duckhunt 2" eller ett helt nytt tema.
-
-Du skall alltså utveckla Duckhunt 2, eller ett liknande spel där du själv kan bestämma temat för det spelet.
-
-Du skall göra en onepage som marknadsför spelet och som innehåller information om spelet.
+Det finns optionella delar som du kan välja att göra för att öka dina chanser till ett högre betyg, (krav 4-6).
 
 
 
-### Generell struktur
+### Krav 1: CSharp
 
-Du jobbar i mappen `public/`.
+Utför följande krav.
 
-1. Skapa filen `public/project.html` och lägg till menyvalet i navbaren likt tidigare.
+1. Skapa ett CSharp projekt i katalogen `kmom/10/Eshop` genom att kopiera `kmom/08/Eshop`. 
 
-1. Skapa filen `public/js/project.js` och läs in den i `project.html`. Det är "startfilen" för din JavaScript.
+1. Dela upp koden i klasser. Organisera din kod så att den är DRY. Refaktorisera när det behövs.
 
-1. Skapa filen `public/css/project.css` som sköter stylen för uppgiften.
+1. Skriv all din kod i din branch `main`. 
 
-1. Lägg till i navbaren så att det finns en länk till `project.html`.
+1. Koden skall passera `roslynator analyze` enligt Roslyn.
 
-När du är klar bör du ha följande filer, tillsammans med dina tidigare:
-
-<FileTree>
-
-- public
-  - js
-    - **project.js**
-  - css
-    - **project.css**
-  - **project.html**
-
-</FileTree>
-
-
-När man går till `project.html` så kommer man till din onepage som visar upp och makrnadsför ditt spel.
-
-Själva spelet kan du göra spelbart antingen direkt i din onepage eller i en separat fil. Om du gör spelet spelbart direkt i din onepage så skall spelet täcka hela webbsidans utrymme.
+1. Samtliga krav från kmom07 och kmom08 skall vara uppfyllda.
 
 
 
-### Krav 1: Landningssida för spelet, onepage
+### Krav 2: Databasens schema och innehåll
 
-Du ska lansera spelet och skapa en presentations- och marknadsföringssida som inkluderar möjligheten att testa spelet. Detta skapar du i form av en onepage.
+Utför följande krav.
 
-I den säljande texten ska du berätta om de olika kraven som är implementerade och vad man kan göra i spelet. 
+1. Du har sedan tidigare följande filer i katalogen `sql/` för att skapa databasen med dess schema och innehåll. Uppdatera dessa filer för att uppfylla kraven i uppgiften.
 
-Visualisera spelet med skärmdumpar och/eller bilder. Du kan även skapa en kort video som visar spelet i aktion (video får betrakts som ren överkurs, men ett trevligt inslag).
+    1. `setup.sql`
+    1. `proc.sql`
+    1. `insert.sql`
 
-Gör vad du kan för att sälja in spelet och skapa intresse för det. Tänk:
+1. Uppdatera din databasmodell i filen `sql/eshop.puml` med egen kraft eller med hjälp av din AI-kompis.
 
-> "Make it look good."
+1. När du är helt klar, skapa en backup av din databas och spara i `sql/backup.sql`. Läs mer om hur du [skapar (och verifierar) en backupfil](https://github.com/bth-databas/forum/discussions/9). 
 
-1. Din onepage skall ha en liknande struktur som i kmom03 och vara indelad i sektioner, rader, kolumner. Du väljer själv hur du presenterar spelet och hur du organiserar dina olika sektioner. 
+    ```bash title="Skapa en backup av din databas."
+    mariadb-dump                          \
+        --routines                        \
+        --triggers                        \
+        --default-character-set=utf8mb4   \
+        eshop > backup.sql
+    ```
 
-1. Din onepage skall vara stylad med CSS så att den har ett rimligt och attraktivt utseende.
 
-1. Din onepage skall vara vara responsiv.
 
-1. Din onepage skall innehålla en header med en navbar. I inledningen av din onepage skall det finnas bilder som refererar till spelet. 
+#### Självtest databas
 
-1. Det skall finnas en footer som är indelad i tre delar. Informationen som presenteras skall vara relevant för projektet och spelet.
+Försäkra dig om att din backupfil fungerar. När läraren återskapar din databas så kommer följande kommando att köras.
 
-{/*
-Flyttas till redovisningssidan istället.
+```bash
+# Gå till katalogen sql/
+mariadb eshop < backup.sql
+```
 
-1. I sista sektionen på sidan skall du skriva en kort redogörelse för varje krav du löst (krav 1-6) och berätta hur du tänkte och gick tillväga när du löste kravet. Betygsättningen startar i denna text så se till att du skriver väl. Gör ett stycke där du summerar dina erfarenheter från projektet och där du kort berättar hur arbetet flöt på. Avsluta med att lägga till din TIL; för projektet.
+Kontrollera att du även kan återskapa din databas enligt följande.
+
+```bash title="Återskapa databas"
+# Gå till katalogen sql/
+mariadb < setup.sql
+mariadb eshop < proc.sql
+mariadb eshop < insert.sql
+```
+
+Flödet ovan behöver fungera, om din backupfil inte fungerar så kan läraren välja att prova att återställa din databas från dessa filer. Det är tillåtet att dela upp din kod i fler filer och göra source på dem samt att läsa in data från till exempel csv-filer.
+
+Filerna `proc.sql` och `insert.sql` får inte innehålla ett `USE eshop` för att välja databas. Det gör att läraren får problem vid rättning.
+
+Kontrollera att databasen innehåller tillräckligt med data.
+
+
+
+### Krav 3: CRUD product
+
+Implementera följande menyval.
+
+```bash
+product_add <title> <base_price>  - Add a new product with its base price
+product_edit <product_id>         - Edit details of a product
+product_del <product_id>          - Delete a product using soft delete.
+product_deleted <product_id>      - Show all soft deleted products.
+product_restore <product_id>      - Un-delete a product that was soft deleted.
+```
+
+Det räcker att man kan redigera produktens namn och pris vid `product_edit`.
+
+Använd "soft delete" när en produkt raderas med `product_del`.
+
+När en produkt är "soft" raderad så skall den inte synas via kommandot `product <search>` (från kmom07).
+
+Man skall kunna återställa en raderad produkt med hjälp av `product_restore`.
+
+
+
+#### Självtest CRUD product
+
+Genomför följande självtest för att verifiera att grundfunktionaliteten finns på plats.
+
+1. Skapa en ny produkt.
+1. Radera den nyskapade produkten.
+1. Visa att den raderade produkten inte syns bland produkterna. 
+1. Visa att den raderade produkten syns bland de raderade produkterna.
+1. Återställ produkten.
+1. Redigera produktens namn, pris.
+1. Visa att den återställda produkten inte syns bland de raderade produkterna.
+1. Visa att den återställda produkten syns bland produkterna. 
+
+
+
+{/* KRAV
+* där varje produkt finns i en eller flera produktkategorier
+* invoice
+* picklist, ship, payed
+*
+* Self test
+  * Add it to inv
+  * Order it
+  * Picklist
+  * Ship
+  * Pay
 */}
 
 
+### Krav 4 (optionellt): Picklist & Ship
 
-### Krav 2: Spelet Duckhunt, version 2
-
-Du ska vidareutveckla ditt spel från kursmoment 06, alternativt gör du en egen liknande spelídé där liknande krav kan uppfyllas.
-
-Din inlämning skall uppfylla kraven från kmom06 samt nedanstående krav.
-
-1. Konfigurationen som styr spelets inställningar ska flyttas till egna filer (`easy.json`, `normal.json` och `hard.json`). Konfigurationen som ska läsas in med `fetch`. Inspelningar kan gälla till exempel svårighetsgraden på spelet, hastigheten och storleken på föremålet, tid som föremål visas, med mera.
-
-1. Innan man startar spelet skall man kunna välja vilken "svårighetsgrad" man vill spela på via ett formulär. Rätt JSON-fil ska då läsas in och användas i spelomgången.
-
-1. Du skall ha nya bakgrundsbilder och nya bilder på ankor. Här ska du då antingen hitta eller skapa andra bilder.
-
-1. Gör en sektion i din onepage där du berättar som spelet och spelidén. Lägg till en bild för att visualisera hur spelet ser ut. Förklara för användaren hur spelet fungerar och styrs.
-
-1. I din onepage skall det finnas en rad/sektion som visar hur man kommer igång med spelet och spelar en spelomgång. Spelet kan startas i din onepage eller i en separata fil.
+_Detta krav är ännu inte definierat._
 
 
 
-### Krav 3: Highscorelista i tabell
+### Krav 5 (optionellt): Invoice
 
-Ditt spel skall innehålla poängberäkning och highscorelista.
-
-Efter varje runda man spelat spelet ska poängen tillsammans med svårighetsgraden sparas i en highscorelista. När man spelat en spelomgång så visas highscorelistan i en tabell. När sidan för spelet laddas om i webbläsaren så kan highscorelistan nollställas.
-
-1. Visa poängen när man spelar en spelomgång.
-
-1. En spelomgång har en tidsbegränsning, t.ex. 30 sekunder. Man ser att tiden räknas ner när man spelar spelet. När tiden når 0 är spelomgången över.
-
-Gör en sektion i din onepage där du beskriver denna "feature" och hur den fungerar. Lägg till en bild för att visualisera hur highscorelistan ser ut.
+_Detta krav är ännu inte definierat._
 
 
 
-### Krav 4 (optionellt): CSS animationer
+### Krav 6 (optionellt): Pay
 
-Förhöj spelupplevelsen genom att lägga till animationer med CSS till ditt spel. Välj minst tre av följande förslag.
-
-1. När man klickar på objektet försvinner det med en animation. Kanske exploderar/imploderar det?
-
-1. Objektet ska röra sig på skärmen i godtycklig riktning. Det ska förflytta sig i sidled, uppifrån och ned eller i en slumpmässig riktning. 
-
-1. Gör en intro till ditt spel, precis innan spelet börjar så händer det någon form av animation eller "splash screen" som visar spelets namn. 
-
-1. Gör en outro till spelet, något som händer (animeras) när spelet är avslutat.
-
-1. Valfri animation.
-
-Gör en sektion i din onepage där du beskriver dessa animationer och hur de fungerar. Lägg till en bild för att visualisera hur animationerna ser ut.
-
-
-
-### Krav 5 (optionellt): Extra features
-
-Gör ditt spel mer intressant och roligt med extra features. Välj minst tre av följande förslag.
-
-1. Ljud: Lägg till ljudeffekter i spelet.
-
-1. Fler objekt: Lägg till fler typer av objekt som kan dyka upp i spelet där olika typer ger olika för/nackdelar.
-
-    1. Ett objekt ger extra bonuspoäng när man klickar på det.
-    1. Ett objekt som inte får klickas, om man klickar får man minuspoäng. 
-    1. Ett objekt som ger extra tid.
-    1. Ett objekt som förstör alla andra objekt, om man klickar på det.
-
-1. Valfri likvärdig feature.
-
-Gör en sektion i din onepage där du beskriver dessa extra features och hur de fungerar. Lägg till bilder för att visualisera.
-
-
-
-### Krav 6 (optionellt): Duckhunt spelbart på mobil/läsplatta
-
-_Du måste ha utfört krav 4 och 5, för att kunna göra detta krav._
-
-Gör så att ditt spel går att spela på mobilen eller på en läsplatta.
-
-Gör en sektion i din onepage som beskriver hur du gjort för att spelet ska gå att spela på mobil/läsplatta. Lägg till bilder för att visualisera hur det ser ut på mobilen/läsplattan.
-
-**ALTERNATIVT**
-
-Gör så att spelet är indelat i olika nivåer med ökande svårighetsgrad. Du kan t.ex. börja med att göra en "easy" nivå, sedan en "normal" nivå och slutligen en "hard" nivå.
-
-För att klara en nivå måste man nå ett visst antal poäng innan tiden är slut. Klarar man det så hoppar man till nästa nivå. Annars är spelet över.
-
-Lägg till i highscorelistan vilken pong och nivå och svårighetsgrad som spelaren nådde.
-
-
-{/*
-
-* Egen spelide är ett optionellt krav
-* Inte rimligt med mobilvariant?
-* Visa highscorelistan i localstorage i onepage
-* localstorage
-* fullscreen
-* installera mobil
-* Verifiera att spelet funkar både chrome och firefox
-* I onepage, visa exempel på animationerna när ankorna träffas
-* Highscore mot local storage.
-* +5s när man spelar bra?
-* tag/länk som leder direkt till spelet, för att testa på mobilen, berätta vilka delar man fick lösa för att kunna spela på mobilen?
-* Svårt att rätta med de optionella kraven
-* HuD display
-* Var tydlig med vilka delar (bilder, kod, effekter) som är genererade av AI eller om de är egengjorda eller lånade.
-* Inledande skärm, avslutande skärm (splash)
-* Onepage bilder till spelet.
-* Gör så att musen har en "crosshair"
-* Många ankor samtidigt.
-*/}
+_Detta krav är ännu inte definierat._
 
 
 
 ### Krav inlämning
 
-1. Skriv all din kod i din branch `main`. 
+1. Skapa backupfilen.
 
-1. Dina webbsidor skall validera i W3C HTML validator.
+1. Använd backupfilen som underlag när du genomför självtesterna för de kommandon du implementerat.
 
-1. Dina webbsidor skall validera i W3C CSS validator (när det är rimligt).
+1. Tagga du ditt repo (v10.0.0 eller högre) och pushar till GitHub.
 
-1. Din webbplats skall passera `npx eslint`.
-
-1. Din webbplats skall gå att starta via `npx http-server`.
-
-1. När du är klar så taggar du ditt repo (v7.0.0 eller högre) och pushar till GitHub.
-
-1. Din webbplats skall vara tillgänglig via en privat länk på GitHub Pages.
-
-1. När allt är klart och fungerar så gör du en pullrequest (PR) mot branchen `bth/submit/kmom10`. [Läs om hur du gör en PR för kmom10](/website/laromaterial/instruktion/gor-en-pr-for-kmom10)".
+1. Gör du en pull request (PR) mot branchen `bth/submit/kmom10`. [Läs om hur du gör en PR](/website/laromaterial/instruktion/gor-en-pr-for-kmom03/)".
 
 
 
@@ -278,4 +219,4 @@ Se till att följande frågor besvaras i din redovisningstext.
 
     1. **Campus** Du redovisar muntligt i klassrummet under schemalagd tid. Du förbereder en kort presentation (3-5 min) där du visar upp din lösning och berättar om hur du löst kraven. Du kan använda bilder, skärmdumpar eller liknande för att visa upp din lösning. Du kan även visa upp din kod om du vill. Efter din presentation så får du frågor från lärare och/eller dina kurskamrater.
 
-    1. **Distans och kurspaket** Spela in en redovisningsvideo och lägg länken till videon i din PR (redigera din PR och lägg in den tillsammans med länken till din GitHub pages). Detta kan du göra dagen efter projektets deadline. Läs mer om hur du kan [spela in en redovisningsvideo med OBS](/website/laromaterial/instruktion/redovisningsvideo-spela-in/).
+    1. **Distans och kurspaket** Spela in en redovisningsvideo och lägg länken till videon i din PR (redigera din PR och lägg in länken). Detta kan du göra dagen efter projektets deadline. Läs mer om hur du kan [spela in en redovisningsvideo med OBS](/website/laromaterial/instruktion/redovisningsvideo-spela-in/).

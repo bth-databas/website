@@ -46,7 +46,7 @@ Utför följande krav.
 
 Utför följande krav.
 
-1. Skapa underkatalogen `sql` där du placerar din `setup.sql` som innehåller SQL-kod för att skapa databasen `eshop` tillsammans med tabeller och vyer. Det är fritt fram att justera SQL-koden som skapar schemat, även om det inte följer din ursprungliga ER-modell. Se framåt och gör bättre efterhand som du lär dig mer om din databas och när det finns anledning att anpassa dess schema.
+1. Skapa underkatalogen `sql/` där du placerar din `setup.sql` som innehåller SQL-kod för att skapa databasen `eshop` tillsammans med tabeller och vyer. Det är fritt fram att justera SQL-koden som skapar schemat, även om det inte följer din ursprungliga ER-modell. Se framåt och gör bättre efterhand som du lär dig mer om din databas och när det finns anledning att anpassa dess schema.
 
 1. Skapa filen `insert.sql` där du placerar SQL-kod som fyller (delar av) databasens tabeller med innehåll.
 
