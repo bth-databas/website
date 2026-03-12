@@ -188,6 +188,15 @@ När man skickar en order så skall antalet produkter på lagret räknas ned. F�
 
 Håll det enkelt när du testar. Undvik att placera en produkt på flera lagerhyllor. Se till att det finns tillräckligt med produkter på lagret. Undvik specialfall. Undvik felfall. Håll det enkelt. Krångla inte till det.
 
+I databasen skall det finnas minst följande data förande ordrar.
+
+1. Lägg in minst 5 ordrar där följande skall vara uppfyllt:
+    1. En order har ingen orderrad.
+    1. Fyra av ordrarna har en eller flera orderrader.
+    1. En av ordrarna är markerad som ännu ej beställd.
+    1. En av ordrarna är markerad som beställd.
+    1. Två av ordrarna är markerad som skeppad/skickad.
+
 
 
 #### Självtest Picklist & Ship
@@ -205,47 +214,46 @@ Genomför följande självtest för att verifiera att grundfunktionaliteten finn
 
 
 
-### Krav 6 (optionellt): Invoice && Pay
+### Krav 6 (optionellt): Invoice & Pay
 
 Detta kravet förutsätter att du löst krav 5.
 
-_Detta krav är ännu inte definierat._
+När en leverans skickas så genereras automatiskt ett underlag för en faktura med ett fakturanummer. Fakturan innehåller samma orderrader som ordern.
 
-{/*
-När en leverans skickas så genereras automatiskt en faktura som innehåller produkt, antal, försäljningspris per styck och summerat per orderrad. 
+När man skriver ut en faktura kan man se detaljer om själva fakturan som visar både datum för när ordern skapades och när fakturan skapades samt vilken kund det gäller. Det skall finnas ett senaste betaldatum för fakturan som är 30 dagar från när fakturan skapades.
 
-Man kan också se detaljer om kunden samt ett totalpris för fakturan.
-*/}
+För varje orderrad, eller fakturarad, så ser man produktens id och namn samt antal, försäljningspris och totalen. Man ser också inköpspriset per styck (produktens baspris) och en summa som berättar hur mycket företaget tjänade på just denna fakturaraden.
+
+I sista delen ser man totala beloppet som fakturan är på, det som kunden skall betala. Man ser också totalt hur mycket företaget tjänade på just denna fakturan.
+
+Detta med företages vinst på försäljningen är ju inte den informationen som kunden får på sin faktura, denna faktura innehåller lite mer så att företagets controller kan undersöka hur mycket pengar man tjänar på varje faktura. Det är en faktura med "extra allt".
+
+När fakturan skrivs ut så skall det tydligt framgå, i sista utskriften att fakturan är betald eller ej, man skall också se när fakturan betalades.
+
+Implementera följande menyval.
+
+```bash
+invoices <search>      - Show a list of all invoices (or filter by search).
+invoice <invoice_id>   - Show all details of the invoice.
+payed <invoice_id>     - Mark the invoice as payed.
+```
+
+Det skall finnas minst tre fakturor i databasen och av dessa skall en vara betald och de andra skall ännu inte vara betalda.
 
 
 
-{/*
-
-Fakturan innehåller bara de delar som kunde skeppas från plocklistan.
-
-I webbklienten kan man få se alla detaljer om fakturan, dess id, alla fakturarader, priset per fakturarad och det summerade priset samt datum då ordern skickades. Man kan också se status på fakturan, om den är betald eller ej.
-
-I terminalklienten finns ett kommando `payed <invoiceid> <date>` där man kan ange en faktura som betald.
-
-
-#### Självtest Invoice
+#### Självtest Invoice & Pay
 
 Följande är förslag till hur du själv kan testa delar av kravet.
 
-Skapa en order och skeppa en plocklista.
-I webbklienten, kontrollera att fakturan innehåller rätt detaljer.
-I terminalklienten, ange fakturan som betald.
-I webbklienten, visa att fakturans status är uppdaterad till “betald”.
-*/}
-
-{/* KRAV
-* där varje produkt finns i en eller flera produktkategorier
-* invoice, payed
-*
-* Self test
-  * Pay
-*/}
-
+1. Visa vilka fakturor som finns.
+1. Välj en av dem och titta på den så att den innehåller alla detaljer.
+1. Skapa en ny order, gör en picklist av den, markera den som skickad (shipped).
+1. (Fakturan skapas)
+1. Kontrollera att det finns en ny faktura som är kopplad till din order.
+1. Visa alla detaljer om fakturan.
+1. Betala fakturan.
+1. Kontroller att fakturan nu är betald och att det syns i faktura-rapporten.
 
 
 
