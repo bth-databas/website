@@ -25,7 +25,7 @@ Påbörja inte arbetet med projektet förrän denna ruta är borttagen.
 :::
 
 {/* TODO
-* 
+* Faktura kravet kan innehålla ett dolt krav om att alla orderrader skal kopieras till en ny tabell med INSERT FROM SELECT, men kanske skall man i så fall undervisa om det tidigare i kursen.
 */}
 
 
@@ -188,14 +188,14 @@ När man skickar en order så skall antalet produkter på lagret räknas ned. F�
 
 Håll det enkelt när du testar. Undvik att placera en produkt på flera lagerhyllor. Se till att det finns tillräckligt med produkter på lagret. Undvik specialfall. Undvik felfall. Håll det enkelt. Krångla inte till det.
 
-I databasen skall det finnas minst följande data förande ordrar.
+I databasen skall det finnas minst följande data rörande ordrar.
 
 1. Lägg in minst 5 ordrar där följande skall vara uppfyllt:
     1. En order har ingen orderrad.
     1. Fyra av ordrarna har en eller flera orderrader.
     1. En av ordrarna är markerad som ännu ej beställd.
     1. En av ordrarna är markerad som beställd.
-    1. Två av ordrarna är markerad som skeppad/skickad.
+    1. Två av ordrarna är markerade som skeppad/skickad.
 
 
 
@@ -238,7 +238,9 @@ invoice <invoice_id>   - Show all details of the invoice.
 payed <invoice_id>     - Mark the invoice as payed.
 ```
 
-Det skall finnas minst tre fakturor i databasen och av dessa skall en vara betald och de andra skall ännu inte vara betalda.
+Det skall finnas minst två fakturor i databasen och av dessa skall en vara betald och den andra skall ännu inte vara betald.
+
+För övrigt, håll det enkelt. Undvik specialfall. Krångla inte.
 
 
 
@@ -248,7 +250,10 @@ Följande är förslag till hur du själv kan testa delar av kravet.
 
 1. Visa vilka fakturor som finns.
 1. Välj en av dem och titta på den så att den innehåller alla detaljer.
-1. Skapa en ny order, gör en picklist av den, markera den som skickad (shipped).
+1. Skapa en ny order.
+  1. Beställ din nyskapade produkt.
+  1. Gör en picklist.
+  1. Markera ordern som beställd och skickad.
 1. (Fakturan skapas)
 1. Kontrollera att det finns en ny faktura som är kopplad till din order.
 1. Visa alla detaljer om fakturan.
