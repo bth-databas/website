@@ -91,6 +91,8 @@ Utför följande krav.
         eshop > backup.sql
     ```
 
+{/* Skriv att man måste vara användaren dbadm när man gör backupen. Även i kmom08 och i foruminlägget. */}
+
 
 
 #### Självtest databas
@@ -127,7 +129,7 @@ Implementera följande menyval.
 product_add <title> <base_price>  - Add a new product with its base price
 product_edit <product_id>         - Edit details of a product
 product_del <product_id>          - Delete a product using soft delete.
-product_deleted <product_id>      - Show all soft deleted products.
+product_deleted <search>          - Show soft deleted products (or filter by <search>).
 product_restore <product_id>      - Un-delete a product that was soft deleted.
 ```
 
