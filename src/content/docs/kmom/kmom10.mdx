@@ -159,35 +159,93 @@ Genomför följande självtest för att verifiera att grundfunktionaliteten finn
 
 
 
-{/* KRAV
-* där varje produkt finns i en eller flera produktkategorier
-* invoice
-* picklist, ship, payed
-*
-* Self test
-  * Add it to inv
-  * Order it
-  * Picklist
-  * Ship
-  * Pay
+### Krav 4 (optionellt): XXX
+
+_Detta krav är ännu inte definierat._
+
+_Försök hitta ett relativt enkelt krav..._
+
+
+
+### Krav 5 (optionellt): Picklist & Ship
+
+[kmom07] Det finns stöd för att skapa en order med orderrader och "beställa" sin order, varje orderrad har en produkt, antal och ett styckepris. I produktens tabell finns ett inköpspris som kan skilja sig från försäljningspriset.
+
+[kmom08] Det finns stöd för att lägga in och ta bort produkter på lagrets hyllor. På varje lagerhylla ligger ett antal av produkten. En lagerhylla kan innehålla flera olika produkter.
+
+Implementera följande menyval.
+
+```bash
+picklist <order_id>     - Present a picklist for the order.
+ship <order_id>         - Ship the order.
+```
+
+I terminalklienten kan man skapa en plocklista för en order med `picklist <order_id>`. Det är en rapport som visar hur många av respektive beställd produkt finns i lagret (eller inte). Rapporten visar på vilken lagerhylla som produkten finns. Plocklistan är till den som skall paketera beställningen i en låda för att levereras till beställaren.
+
+Man kan markera en order som "skickad" via `ship <order_id>`. Det betyder att ordern ändrar status till att vara "paketerad och ivägskickad till kund".
+
+När man skickar en order så skall antalet produkter på lagret räknas ned. Förslagsvis så använder du rapporten i picklist för att veta vilka lagerhyllor som skall räknas ned. 
+
+Håll det enkelt när du testar. Undvik att placera en produkt på flera lagerhyllor. Se till att det finns tillräckligt med produkter på lagret. Undvik specialfall. Undvik felfall. Håll det enkelt. Krångla inte till det.
+
+
+
+#### Självtest Picklist & Ship
+
+Genomför följande självtest för att verifiera att grundfunktionaliteten finns på plats.
+
+1. Välj en lagerhylla och placera 99 st av din nyskapade produkt på den hyllan.
+1. Skapa en order, lägg till en order rad med 9 st av din nyligen skapade produkt med försäljningspris som skiljer sig från inköpspriset.
+1. Kontrollera att lagret stämmer.
+1. Kontrollera att orderns innehåll är korrekt.
+1. Skapa en picklist för ordern.
+1. Gör ship på ordern.
+1. Kontrollera att orderns status uppdaterats.
+1. Kontrollera att antalet produkter på lagerhyllan minskades.
+
+
+
+### Krav 6 (optionellt): Invoice && Pay
+
+Detta kravet förutsätter att du löst krav 5.
+
+_Detta krav är ännu inte definierat._
+
+{/*
+När en leverans skickas så genereras automatiskt en faktura som innehåller produkt, antal, försäljningspris per styck och summerat per orderrad. 
+
+Man kan också se detaljer om kunden samt ett totalpris för fakturan.
 */}
 
 
-### Krav 4 (optionellt): Picklist & Ship
 
-_Detta krav är ännu inte definierat._
+{/*
 
+Fakturan innehåller bara de delar som kunde skeppas från plocklistan.
 
+I webbklienten kan man få se alla detaljer om fakturan, dess id, alla fakturarader, priset per fakturarad och det summerade priset samt datum då ordern skickades. Man kan också se status på fakturan, om den är betald eller ej.
 
-### Krav 5 (optionellt): Invoice
-
-_Detta krav är ännu inte definierat._
-
+I terminalklienten finns ett kommando `payed <invoiceid> <date>` där man kan ange en faktura som betald.
 
 
-### Krav 6 (optionellt): Pay
+#### Självtest Invoice
 
-_Detta krav är ännu inte definierat._
+Följande är förslag till hur du själv kan testa delar av kravet.
+
+Skapa en order och skeppa en plocklista.
+I webbklienten, kontrollera att fakturan innehåller rätt detaljer.
+I terminalklienten, ange fakturan som betald.
+I webbklienten, visa att fakturans status är uppdaterad till “betald”.
+*/}
+
+{/* KRAV
+* där varje produkt finns i en eller flera produktkategorier
+* invoice, payed
+*
+* Self test
+  * Pay
+*/}
+
 
 
 
