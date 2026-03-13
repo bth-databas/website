@@ -1,5 +1,5 @@
 ---
-title: "⚠️ Kmom10: Projekt och examination" 
+title: "Kmom10: Projekt och examination" 
 description: Detta kursmoment examinerar och avslutar kursen.
 ---
 
@@ -15,14 +15,6 @@ Upplägget är enligt följande:
 * Projektet och redovisning (20-40h)
 
 Totalt omfattar kursmomentet (09/10) ca 20+20 studietimmar. Du kan själv styra din arbetsinsats genom att välja vilka optionella delar du utför.
-
-:::danger
-
-Detta kmom är under utveckling och alla delar är ännu inte klara. De delar som finns kan komma att ändras.
-
-Påbörja inte arbetet med projektet förrän denna ruta är borttagen.
-
-:::
 
 {/* TODO
 * Faktura kravet kan innehålla ett dolt krav om att alla orderrader skal kopieras till en ny tabell med INSERT FROM SELECT, men kanske skall man i så fall undervisa om det tidigare i kursen.
@@ -79,7 +71,7 @@ Utför följande krav.
     1. `proc.sql`
     1. `insert.sql`
 
-1. Uppdatera din databasmodell i filen `sql/eshop.puml` med egen kraft eller med hjälp av din AI-kompis.
+1. Uppdatera din databasmodell i filen `sql/eshop.puml` med egen kraft eller med hjälp av din AI-kompis. Gör detta när du är helt klar med projektet så att alla delar du gjort finns med.
 
 1. När du är helt klar, skapa en backup av din databas och spara i `sql/backup.sql`. Läs mer om hur du [skapar (och verifierar) en backupfil](https://github.com/bth-databas/forum/discussions/9). 
 
@@ -159,11 +151,41 @@ Genomför följande självtest för att verifiera att grundfunktionaliteten finn
 
 
 
-### Krav 4 (optionellt): XXX
+### Krav 4 (optionellt): Produktkategori
 
-_Detta krav är ännu inte definierat._
+Inför produktkategorier. Varje kategori har ett kortnamn och en titel. En produkt kan tillhöra noll, en eller flera kategorier.
 
-_Försök hitta ett relativt enkelt krav..._
+När man skapar en ny produkt så tillhör den ännu ingen kategori. 
+
+Implementera (eller uppdatera) följande menyval.
+
+```bash
+products <search>                - Show all products or filter by <search>
+categories <search>              - Show all categories or filter by <search>
+prod2cat <product_id> <category> - Add a product to a category.
+```
+
+I resultatet för `products <search>` visas samtliga produkter, även de som ännu inte tillhör en kategori. Visa detaljer om produkten, inklusive de kategorier som den tillhör. Om produkten tillhör flera kategorier så skall produkten fortfarande visas på en rad, inklusive detaljer om de kategorier den tillhör.
+
+I din databas skall finnas minst följande data:
+
+1. Minst tre olika kategorier.
+1. En produkt som inte tillhör någon kategori.
+1. En produkt som tillhör en kategori.
+1. En produkt som tillhör två kategorier.
+
+
+
+#### Självtest Produktkategori
+
+Genomför följande självtest för att verifiera att grundfunktionaliteten finns på plats.
+
+1. Skapa en ny produkt.
+1. Kontrollera att den syns i listan av alla produkter.
+1. Koppla produkten till en kategori.
+1. Kontrollera att den syns i listan av alla produkter med sin kategori.
+1. Koppla produkten till ytterligare en kategori.
+1. Kontrollera att den syns i listan av alla produkter med sina båda kategorier (på en rad).
 
 
 
