@@ -125,6 +125,17 @@ product_deleted <search>          - Show soft deleted products (or filter by <se
 product_restore <product_id>      - Un-delete a product that was soft deleted.
 ```
 
+<details>
+<summary>Men jag har inte AUTO_INCREMENT som id på produkten?</summary>
+
+Ok, du kanske valde att lägga till ett eget id på produkten? I så fall kan du anpassa kommandot så här:
+
+```bash
+product_add <title> <base_price> <id> - Add a new product with its base price and id.
+```
+
+</details>
+
 Det räcker att man kan redigera produktens namn och pris vid `product_edit`.
 
 Använd "soft delete" när en produkt raderas med `product_del`.
