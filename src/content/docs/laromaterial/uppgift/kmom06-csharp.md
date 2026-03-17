@@ -42,7 +42,7 @@ Ditt terminalprogram skall stödja samma menyval som fanns som krav i terminalpr
 
 Följande är de nya menyvalen som skall stödjas.
 
-```text
+```bash
 $ dotnet run
 items <search>        - Show (or filter) all products that are in the marketplace
                       - or in the inventory, combine into one single report, one

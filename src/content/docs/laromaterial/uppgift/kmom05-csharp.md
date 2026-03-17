@@ -48,7 +48,7 @@ Utför följande krav.
 
 1. Uppdatera din CSharp-kod så att den använder sig av lagrade procedurer för att implementera (minst) följande kommandon.
 
-```text
+```bash
 $ dotnet run
 move                      - Move 1.5 bitcoin from Adam to Eva
 move <amount> <from> <to> - Move a flexible amount of bitcoin from one account to another account
@@ -74,21 +74,15 @@ Ditt terminalprogram skall stödja samma menyval som fanns som krav i terminalpr
 
 Följande är de nya menyvalen som skall stödjas.
 
-<!--
-TODO
-
-*
--->
-
-```text
+```bash
 $ dotnet run
 marketplace <search>   - Show all products on the marketplace or filter by <search>
 product <search>       - Show all products in the product catalogue or filter by <search>
 inventory <search>     - Show all inventory or filter by <search>
 
-sell <customerid> <inventoryid> <price> - Move a product from the customers inventory to the 
+sell <customer_id> <inventory_id> <price> - Move a product from the customers inventory to the 
                                         - marketplace, offer for a price.
-buy <customerid> <marketplaceid>        - Buy a product from the marketplace to the customer
+buy <customer_id> <marketplace_id>        - Buy a product from the marketplace to the customer
                                         - inventory, pay for it.
 ```
 
@@ -97,10 +91,10 @@ Bygg stöd för samtliga menyval ovan.
 <details>
 <summary>UPPDATERING. Menyvalet `market` är borttaget.</summary>
 
-Menyvalet `market <productid> <price>` är borttaget för att förenkla uppgiften. Det fanns med i första utgåvan av uppgiften.
+Menyvalet `market <product_id> <price>` är borttaget för att förenkla uppgiften. Det fanns med i första utgåvan av uppgiften.
 
 ```text
-market <productid> <price>            - Add a new product (from the product table) to the 
+market <product_id> <price>            - Add a new product (from the product table) to the 
                                       - marketplace for the specified price.
 ```
 
@@ -109,14 +103,14 @@ market <productid> <price>            - Add a new product (from the product tabl
 <details>
 <summary>UPPDATERING. Menyvalet `sell` är uppdaterat.</summary>
 
-Menyvalet `sell <customerid> <inventoryid> <price>` hade tidigare `productid` istället för `inventoryid`. Men det är troligen enklare att hantera en flytt som direkt pekar ut en rad i tabellen inventory, istället för att peka ut en viss produkt.
+Menyvalet `sell <customer_id> <inventory_id> <price>` hade tidigare `product_id` istället för `inventory_id`. Men det är troligen enklare att hantera en flytt som direkt pekar ut en rad i tabellen inventory, istället för att peka ut en viss produkt.
 
 Ändringen är gjord för att förenkla uppgiften.
 
 Så här såg det ut i första utgåvan av uppgiften. Har man gjort på det viset så är det också godkänt.
 
 ```text
-sell <customerid> <productid> <price> - Move a product from the customers inventory to the 
+sell <customer_id> <product_id> <price> - Move a product from the customers inventory to the 
                                       - marketplace, offer for a price.
 ```
 
@@ -125,14 +119,14 @@ sell <customerid> <productid> <price> - Move a product from the customers invent
 <details>
 <summary>UPPDATERING. Menyvalet `buy` är uppdaterat.</summary>
 
-Menyvalet `buy <customerid> <marketplaceid>` hade tidigare `productid` istället för `marketplaceid`. Men det är troligen enklare att hantera ett köp som direkt pekar ut en rad i tabellen marketplace, istället för att peka ut en viss produkt.
+Menyvalet `buy <customer_id> <marketplace_id>` hade tidigare `product_id` istället för `marketplace_id`. Men det är troligen enklare att hantera ett köp som direkt pekar ut en rad i tabellen marketplace, istället för att peka ut en viss produkt.
 
 Ändringen är gjord för att förenkla uppgiften.
 
 Så här såg det ut i första utgåvan av uppgiften. Har man gjort på det viset så är det också godkänt.
 
 ```text
-buy <customerid> <productid>          - Buy a product from the marketplace to the customer
+buy <customer_id> <product_id>          - Buy a product from the marketplace to the customer
                                       - inventory, pay for it.
 ```
 
@@ -146,7 +140,7 @@ Fortsätt att läsa för att förstå hur din databas skall byggas upp för att 
 
 Utför följande krav.
 
-1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk Gringotts bank, där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för product_id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
+1. Din databas skall ha en tabell som heter `product` som är en produktkatalog över "produkter" eller "items" eller "saker" som finns i din bank. Tänk "Gringotts bank", där fanns det en massa konstiga saker i bankvalven. I tabellen skall det finnas kolumner för product_id, name, description, base_price samt created_at, updated_at (TIMESTAMPS).
 
 1. Lägg till INSERT för att lägga till minst 5 olika produkter i tabellen.
 
@@ -198,7 +192,7 @@ I tidigare utgåvor av uppgiften så skedde transaktioner mellan account när en
 
 1. ~När en customer köper en produkt så flyttas pengar från kunden till ett konto som ägs av marketplace. Av dessa pengar flyttas 0.01 pengar till det hemliga kontot.~
 
-1. ~När en customer säljer en produkt till marketplace så får customern pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.~
+1. ~När en customer säljer en produkt till marketplace så får kunden pengar från marketplace (pengar flyttas i respektive account). Av dessa pengar flyttas direkt 0.01 peng till det hemliga kontot.~
 
 Så kan man naturligtvis så på transaktionen. Om du löst det på det viset så är det ok.
 

@@ -136,7 +136,7 @@ product_add <title> <base_price> <id> - Add a new product with its base price an
 
 </details>
 
-Det räcker att man kan redigera produktens namn och pris vid `product_edit`.
+Det räcker att man kan redigera produktens namn och pris vid `product_edit`. Tanken med "edit" är att man får upp en ny meny (eller liknande) där man kan redigera detaljer om produkten. En variant är att man kan klicka igenom alla värden som kan ändras och antingen skriver man in ett nytt värde för att ändra, eller så trycker man enter och då ändras inte värdet. Men exakt hur man löser det kan variera.
 
 Använd "soft delete" när en produkt raderas med `product_del`.
 
@@ -171,9 +171,9 @@ När man skapar en ny produkt så tillhör den ännu ingen kategori.
 Implementera (eller uppdatera) följande menyval.
 
 ```bash
-products <search>                - Show all products or filter by <search>
-categories <search>              - Show all categories or filter by <search>
-prod2cat <product_id> <category> - Add a product to a category.
+products <search>                   - Show all products or filter by <search>
+categories <search>                 - Show all categories or filter by <search>
+prod2cat <product_id> <category_id> - Connect a product with a category.
 ```
 
 I resultatet för `products <search>` visas samtliga produkter, även de som ännu inte tillhör en kategori. Visa detaljer om produkten, inklusive de kategorier som den tillhör. Om produkten tillhör flera kategorier så skall produkten fortfarande visas på en rad, inklusive detaljer om de kategorier den tillhör.

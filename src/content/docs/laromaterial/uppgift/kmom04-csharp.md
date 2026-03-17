@@ -70,7 +70,7 @@ Utför följande krav.
 
 1. Använd PRIMARY KEY och FOREIGN KEY i dina tabeller.
 
-1. Det är okey om det blir mindre än 0 i balans på ett konto.
+1. Det är okej om det blir mindre än 0 i balans på ett konto.
 
 
 
@@ -78,10 +78,10 @@ Utför följande krav.
 
 Skapa en menydriven applikation C# som ser ut så här för användaren.
 
-När programmet startas så skrivs meny ut. Du kan formattera utskriften av menyn efter dina egna tankar.
+När programmet startas så skrivs meny ut. Du kan formatera utskriften av menyn efter dina egna tankar.
 
 
-```text
+```bash
 $ dotnet run
 m, menu, help, h          - Print out the menu.
 customer <search>         - Show all customers or filter by <search>
